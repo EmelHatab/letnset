@@ -3,27 +3,61 @@
 
 <head>
   <title>Kirjaudu sisään</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .auth-container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #3c3836;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      border-left: 5px solid #fe8019;
+    }
+    .auth-container h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .auth-links {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #504945;
+    }
+    .auth-links a {
+      color: #fe8019;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .auth-links a:hover {
+      color: #fabd2f;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Kirjaudu sisään</h1>
-
-  <form action="/login" method="post">
-    <p>
-      Tunnus: <br />
-      <input type="text" name="username" />
-    </p>
-    <p>
-      Salasana: <br />
-      <input type="password" name="password" />
-    </p>
-    <input type="submit" value="Kirjaudu" />
-  </form>
-
-  <hr />
-  <p>
-    <a href="/">Etusivulle</a>
-  </p>
+  <div class="container">
+    <div class="auth-container">
+      <h1>🔐 Kirjaudu sisään</h1>
+      <form action="/login" method="post">
+        <div class="form-group">
+          <label for="username">Tunnus</label>
+          <input type="text" id="username" name="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Salasana</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit" class="submit-btn" style="width: 100%;">Kirjaudu</button>
+      </form>
+      <div class="auth-links">
+        <p>Eikö tunnusta? <a href="/register">Luo uusi</a></p>
+        <p><a href="/">← Etusivulle</a></p>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

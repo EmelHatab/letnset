@@ -1,7 +1,8 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, Response
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 import config, db, users, marketplace
 
@@ -19,14 +20,58 @@ def show_location(location_id):
     # messages = forum.get_messages(thread_id)
     return render_template("location.html", location=location)
 
+@app.route("/location/<int:location_id>/image")
+def get_location_image(location_id):
+    location = marketplace.get_location(location_id)
+    if location and location[4]:  # Check if image exists (index 4 is the image field)
+        return Response(location[4], mimetype="image/jpeg")
+    return "No image", 404
+
 @app.route("/new_location", methods=["POST"])
 def new_location():
     name = request.form["name"]
     description = request.form["description"]
     user_id = session["user_id"]
+    image_data = None
+    
+    if "image" in request.files:
+        image_file = request.files["image"]
+        if image_file.filename != "":
+            image_data = image_file.read()
 
-    location_id = marketplace.add_location(name, description, user_id)
+    location_id = marketplace.add_location(name, description, user_id, image_data)
     return redirect("/location/" + str(location_id))
+
+@app.route("/edit/<int:location_id>", methods=["GET", "POST"])
+def edit_message(location_id):
+    location = marketplace.get_location(location_id)
+
+    if request.method == "GET":
+        return render_template("edit.html", location=location)
+
+    if request.method == "POST":
+        description = request.form["description"]
+        image_data = None
+        
+        if "image" in request.files:
+            image_file = request.files["image"]
+            if image_file.filename != "":
+                image_data = image_file.read()
+        
+        marketplace.update_location(location["id"], description, image_data)
+        return redirect("/location/" + str(location["id"]))
+
+@app.route("/remove/<int:location_id>", methods=["GET", "POST"])
+def remove_location(location_id):
+    location = marketplace.get_location(location_id)
+
+    if request.method == "GET":
+        return render_template("remove.html", location=location)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            marketplace.remove_location(location["id"])
+        return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
