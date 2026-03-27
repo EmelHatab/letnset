@@ -2,32 +2,47 @@
 <html>
 
 <head>
-  <title>Kirjautuminen</title>
+  <title>Paikat</title>
 </head>
 
 <body>
-  {% if session.username %}
+  <h1>Paikat</h1>
+
   <p>
-    Olet kirjautunut nimellä {{ session.username }}
-  </p>
-  <p>
+    <a href="/register">Luo tunnus</a> |
+    {% if session.user_id %}
     <a href="/logout">Kirjaudu ulos</a>
+    {% else %}
+    <a href="/login">Kirjaudu sisään</a>
+    {% endif %}
   </p>
-  {% else %}
-  <form action="/login" method="post">
-    <p>
-      Tunnus: <br />
-      <input type="text" name="username" />
-    </p>
-    <p>
-      Salasana: <br />
-      <input type="password" name="password" />
-    </p>
-    <input type="submit" value="Kirjaudu" />
-  </form>
+
+  <hr />
+  {% for location in locations %}
   <p>
-    <a href="/register">Luo tunnus</a>
+    <a href="/location/{{ location.id }}">{{ location.name }}</a>
+    <br />
+    location.description
+    <br />
+    location.username
   </p>
+  <hr />
+  {% endfor %}
+
+  {% if session.user_id %}
+  <h2>Uusi ketju</h2>
+
+  <form action="/new_location" method="post">
+    <p>
+      Otsikko:<br />
+      <input type="text" name="title" />
+    </p>
+    <p>
+      Viesti:<br />
+      <textarea name="content" rows="5" cols="40"></textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+  </form>
   {% endif %}
 </body>
 
