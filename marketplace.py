@@ -37,13 +37,13 @@ def add_message(content, user_id, thread_id):
              (?, datetime('now'), ?, ?)"""
     db.execute(sql, [content, user_id, thread_id])
 
-def update_location(location_id, description, image_data=None):
+def update_location(location_id, name, description, image_data=None):
     if image_data:
-        sql = "UPDATE Locations SET description = ?, image = ? WHERE id = ?"
-        db.execute(sql, [description, image_data, location_id])
+        sql = "UPDATE Locations SET name = ?, description = ?, image = ? WHERE id = ?"
+        db.execute(sql, [name, description, image_data, location_id])
     else:
-        sql = "UPDATE Locations SET description = ? WHERE id = ?"
-        db.execute(sql, [description, location_id])
+        sql = "UPDATE Locations SET name = ?, description = ? WHERE id = ?"
+        db.execute(sql, [name, description, location_id])
 
 def remove_location(location_id):
     sql = "DELETE FROM locations WHERE id = ?"
