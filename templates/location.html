@@ -2,13 +2,13 @@
 <html>
 
 <head>
-  <title>{{ thread.title }}</title>
+  <title>{{ location.name }}</title>
 </head>
 
 <body>
-  <h1>{{ thread.title }}</h1>
+  <h1>{{ location.name }}</h1>
 
-  <hr />
+  <!-- <hr />
   {% for message in messages %}
   <p>
     {{ message.username }} ({{ message.sent_at }}):
@@ -20,7 +20,7 @@
   <p>
     <a href="/edit/{{ message.id }}">Muokkaa</a> |
     <a href="/remove/{{ message.id }}">Poista</a>
-  </p>
+  </p> -->
   {% endif %}
   <hr />
   {% endfor %}
@@ -33,7 +33,7 @@
       Viesti:<br />
       <textarea name="content" rows="5" cols="40"></textarea>
     </p>
-    <input type="hidden" name="thread_id" value="{{ thread.id }}" />
+    <input type="hidden" name="location_id" value="{{ location.id }}" />
     <input type="submit" value="Lähetä" />
   </form>
   <hr />
