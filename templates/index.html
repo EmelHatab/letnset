@@ -22,9 +22,9 @@
   <p>
     <a href="/location/{{ location.id }}">{{ location.name }}</a>
     <br />
-    location.description
+    {{ location.description }}
     <br />
-    location.username
+    {{ location.username }}
   </p>
   <hr />
   {% endfor %}
@@ -35,11 +35,11 @@
   <form action="/new_location" method="post">
     <p>
       Otsikko:<br />
-      <input type="text" name="title" />
+      <input type="text" name="name" />
     </p>
     <p>
       Viesti:<br />
-      <textarea name="content" rows="5" cols="40"></textarea>
+      <textarea name="description" rows="5" cols="40"></textarea>
     </p>
     <input type="submit" value="Lähetä" />
   </form>

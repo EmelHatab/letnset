@@ -8,9 +8,9 @@ def get_locations():
              ORDER BY l.id DESC"""
     return db.query(sql)
 
-def get_location(thread_id):
+def get_location(location_id):
     sql = "SELECT id, name FROM locations WHERE id = ?"
-    return db.query(sql, [thread_id])[0]
+    return db.query(sql, [location_id])[0]
 
 def get_messages(thread_id):
     sql = """SELECT m.id, m.content, m.sent_at, m.user_id, u.username
@@ -24,7 +24,7 @@ def get_message(message_id):
     return db.query(sql, [message_id])[0]
 
 def add_location(name, description, user_id):
-    sql = "INSERT INTO threads (name, description, user_id) VALUES (?, ?, ?)"
+    sql = "INSERT INTO locations (name, description, user_id) VALUES (?, ?, ?)"
     db.execute(sql, [name, description, user_id])
     location_id = db.last_insert_id()
     # add_message(content, user_id, thread_id)
