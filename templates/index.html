@@ -3,47 +3,67 @@
 
 <head>
   <title>Paikat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-  <h1>Paikat</h1>
+  <div class="container">
+    <header>
+      <h1>📍 Paikat</h1>
+      <div class="nav">
+        <a href="/register">Luo tunnus</a>
+        {% if session.user_id %}
+        <a href="/logout">Kirjaudu ulos</a>
+        {% else %}
+        <a href="/login">Kirjaudu sisään</a>
+        {% endif %}
+      </div>
+    </header>
 
-  <p>
-    <a href="/register">Luo tunnus</a> |
+    <div class="locations-grid">
+      {% for location in locations %}
+      <a href="/location/{{ location.id }}" class="location-card">
+        {% if location[3] %}
+        <img src="/location/{{ location.id }}/image" class="location-image" />
+        {% else %}
+        <div class="location-image"></div>
+        {% endif %}
+        <div class="location-content">
+          <div class="location-title">{{ location.name }}</div>
+          <div class="location-description">{{ location.description }}</div>
+          <div class="location-author">👤 {{ location.username }}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
     {% if session.user_id %}
-    <a href="/logout">Kirjaudu ulos</a>
-    {% else %}
-    <a href="/login">Kirjaudu sisään</a>
+    <div class="form-section">
+      <h2>➕ Uusi ilmoitus</h2>
+
+      <form action="/new_location" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="name">Otsikko</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Kuvaus</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="image">Kuva</label>
+          <input type="file" id="image" name="image" accept="image/*" />
+        </div>
+
+        <button type="submit" class="submit-btn">Lähetä ilmoitus</button>
+      </form>
+    </div>
     {% endif %}
-  </p>
-
-  <hr />
-  {% for location in locations %}
-  <p>
-    <a href="/location/{{ location.id }}">{{ location.name }}</a>
-    <br />
-    {{ location.description }}
-    <br />
-    {{ location.username }}
-  </p>
-  <hr />
-  {% endfor %}
-
-  {% if session.user_id %}
-  <h2>Uusi ketju</h2>
-
-  <form action="/new_location" method="post">
-    <p>
-      Otsikko:<br />
-      <input type="text" name="name" />
-    </p>
-    <p>
-      Viesti:<br />
-      <textarea name="description" rows="5" cols="40"></textarea>
-    </p>
-    <input type="submit" value="Lähetä" />
-  </form>
-  {% endif %}
+  </div>
 </body>
 
 </html>
