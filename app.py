@@ -51,6 +51,7 @@ def edit_message(location_id):
 
     if request.method == "POST":
         description = request.form["description"]
+        name = request.form["name"]
         image_data = None
         
         if "image" in request.files:
@@ -58,7 +59,7 @@ def edit_message(location_id):
             if image_file.filename != "":
                 image_data = image_file.read()
         
-        marketplace.update_location(location["id"], description, image_data)
+        marketplace.update_location(location["id"], name, description, image_data)
         return redirect("/location/" + str(location["id"]))
 
 @app.route("/remove/<int:location_id>", methods=["GET", "POST"])

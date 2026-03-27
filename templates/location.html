@@ -68,7 +68,10 @@
 <body>
   <div class="container">
     <header>
-      <h1>{{ location.name }}</h1>
+      <div class="header-left">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="LetnSet Logo" class="logo" />
+        <h1>{{ location.name }}</h1>
+      </div>
       <a href="/" class="back-link">← Takaisin</a>
     </header>
 

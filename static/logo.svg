@@ -1,0 +1,11 @@
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="30" cy="30" r="28" fill="#fe8019" opacity="0.1" stroke="#fe8019" stroke-width="2"/>
+  
+  <!-- Pin/Location marker -->
+  <path d="M30 10 C20 10, 12 18, 12 28 C12 40, 30 52, 30 52 C30 52, 48 40, 48 28 C48 18, 40 10, 30 10" 
+        fill="#fe8019" stroke="#fabd2f" stroke-width="2" stroke-linejoin="round"/>
+  
+  <!-- Inner dot -->
+  <circle cx="30" cy="27" r="5" fill="#fabd2f"/>
+</svg>
