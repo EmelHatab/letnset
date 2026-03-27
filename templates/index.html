@@ -2,33 +2,68 @@
 <html>
 
 <head>
-  <title>Kirjautuminen</title>
+  <title>Paikat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-  {% if session.username %}
-  <p>
-    Olet kirjautunut nimellä {{ session.username }}
-  </p>
-  <p>
-    <a href="/logout">Kirjaudu ulos</a>
-  </p>
-  {% else %}
-  <form action="/login" method="post">
-    <p>
-      Tunnus: <br />
-      <input type="text" name="username" />
-    </p>
-    <p>
-      Salasana: <br />
-      <input type="password" name="password" />
-    </p>
-    <input type="submit" value="Kirjaudu" />
-  </form>
-  <p>
-    <a href="/register">Luo tunnus</a>
-  </p>
-  {% endif %}
+  <div class="container">
+    <header>
+      <h1>📍 Paikat</h1>
+      <div class="nav">
+        <a href="/register">Luo tunnus</a>
+        {% if session.user_id %}
+        <a href="/logout">Kirjaudu ulos</a>
+        {% else %}
+        <a href="/login">Kirjaudu sisään</a>
+        {% endif %}
+      </div>
+    </header>
+
+    <div class="locations-grid">
+      {% for location in locations %}
+      <a href="/location/{{ location.id }}" class="location-card">
+        {% if location[3] %}
+        <img src="/location/{{ location.id }}/image" class="location-image" />
+        {% else %}
+        <div class="location-image"></div>
+        {% endif %}
+        <div class="location-content">
+          <div class="location-title">{{ location.name }}</div>
+          <div class="location-description">{{ location.description }}</div>
+          <div class="location-author">👤 {{ location.username }}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% if session.user_id %}
+    <div class="form-section">
+      <h2>➕ Uusi ilmoitus</h2>
+
+      <form action="/new_location" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="name">Otsikko</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Kuvaus</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="image">Kuva</label>
+          <input type="file" id="image" name="image" accept="image/*" />
+        </div>
+
+        <button type="submit" class="submit-btn">Lähetä ilmoitus</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
 </body>
 
 </html>

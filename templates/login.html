@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Rekisteröinti</title>
+  <title>Kirjaudu sisään</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -14,7 +14,7 @@
       padding: 40px;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      border-left: 5px solid #8ec07c;
+      border-left: 5px solid #fe8019;
     }
     .auth-container h1 {
       text-align: center;
@@ -40,24 +40,20 @@
 <body>
   <div class="container">
     <div class="auth-container">
-      <h1>✨ Luo uusi tunnus</h1>
-      <form action="/create" method="post">
+      <h1>🔐 Kirjaudu sisään</h1>
+      <form action="/login" method="post">
         <div class="form-group">
           <label for="username">Tunnus</label>
           <input type="text" id="username" name="username" required />
         </div>
         <div class="form-group">
-          <label for="password1">Salasana</label>
-          <input type="password" id="password1" name="password1" required />
+          <label for="password">Salasana</label>
+          <input type="password" id="password" name="password" required />
         </div>
-        <div class="form-group">
-          <label for="password2">Salasana uudestaan</label>
-          <input type="password" id="password2" name="password2" required />
-        </div>
-        <button type="submit" class="submit-btn" style="width: 100%;">Luo tunnus</button>
+        <button type="submit" class="submit-btn" style="width: 100%;">Kirjaudu</button>
       </form>
       <div class="auth-links">
-        <p>Onko tunnusta jo? <a href="/login">Kirjaudu</a></p>
+        <p>Eikö tunnusta? <a href="/register">Luo uusi</a></p>
         <p><a href="/">← Etusivulle</a></p>
       </div>
     </div>

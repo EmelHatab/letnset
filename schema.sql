@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Locations (
     name TEXT,
     description TEXT,
     user_id INTEGER,
+    image BLOB,
     FOREIGN KEY(user_id)
         REFERENCES Users
         ON DELETE CASCADE

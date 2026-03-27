@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ilmoituksen muokkaus</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .edit-form {
+      background: #3c3836;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Ilmoituksen muokkaus</h1>
+      <a href="/" class="back-link" style="display: inline-block; padding: 8px 16px; background: #8ec07c; color: #282828; text-decoration: none; border-radius: 5px; margin-top: 10px;">← Takaisin</a>
+    </header>
+
+    <div class="edit-form form-section">
+      <form action="/edit/{{ location.id }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="description">Kuvaus</label>
+          <textarea id="description" name="description" required>{{ location.description }}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="image">Kuva</label>
+          <input type="file" id="image" name="image" accept="image/*" />
+        </div>
+        <button type="submit" class="submit-btn">💾 Tallenna muutokset</button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{ location.name }}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .location-detail {
+      background: #3c3836;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      margin-bottom: 30px;
+    }
+    .location-detail-image {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .location-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #504945;
+      color: #d5c4a1;
+    }
+    .location-author {
+      color: #928374;
+      font-size: 0.9em;
+    }
+    .action-links {
+      display: flex;
+      gap: 10px;
+    }
+    .action-links a {
+      padding: 8px 16px;
+      background: #fe8019;
+      color: #282828;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .action-links a:hover {
+      background: #fabd2f;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #8ec07c;
+      color: #282828;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .back-link:hover {
+      background: #b8bb26;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>{{ location.name }}</h1>
+      <a href="/" class="back-link">← Takaisin</a>
+    </header>
+
+    <div class="location-detail">
+      {% if location[4] %}
+      <img src="/location/{{ location.id }}/image" class="location-detail-image" />
+      {% endif %}
+
+      <p style="color: #d5c4a1; line-height: 1.8; margin-bottom: 20px;">
+        {{ location.description }}
+      </p>
+
+      <div class="location-meta">
+        <div>
+          <div class="location-author">👤 Tekijä: {{ location.username }}</div>
+        </div>
+        {% if location.user_id == session.user_id %}
+        <div class="action-links">
+          <a href="/edit/{{ location.id }}">✏️ Muokkaa</a>
+          <a href="/remove/{{ location.id }}" style="background: #d65d0e;">🗑️ Poista</a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if session.user_id %}
+    <div class="form-section">
+      <h2>💬 Uusi viesti</h2>
+      <form action="/new_message" method="post">
+        <div class="form-group">
+          <label for="content">Viesti</label>
+          <textarea id="content" name="content" required></textarea>
+        </div>
+        <input type="hidden" name="location_id" value="{{ location.id }}" />
+        <button type="submit" class="submit-btn">📤 Lähetä viesti</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</body>
+
+</html>

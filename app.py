@@ -1,43 +1,125 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, Response
 from werkzeug.security import check_password_hash, generate_password_hash
-import config
-import db
+from werkzeug.utils import secure_filename
+
+import config, db, users, marketplace
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    locations = marketplace.get_locations()
+    return render_template("index.html", locations=locations)
 
-@app.route("/login", methods=["POST"])
-def login():
-    username = request.form["username"]
-    password = request.form["password"]
+@app.route("/location/<int:location_id>")
+def show_location(location_id):
+    location = marketplace.get_location(location_id)
+    # messages = forum.get_messages(thread_id)
+    return render_template("location.html", location=location)
 
-    sql = "SELECT password_hash FROM Users WHERE username = ?"
-    try:
-        password_hash = db.query(sql, [username])[0][0]
-    except:
-        return "VIRHE: tyhjä taulukko"
+@app.route("/location/<int:location_id>/image")
+def get_location_image(location_id):
+    location = marketplace.get_location(location_id)
+    if location and location[4]:  # Check if image exists (index 4 is the image field)
+        return Response(location[4], mimetype="image/jpeg")
+    return "No image", 404
 
+@app.route("/new_location", methods=["POST"])
+def new_location():
+    name = request.form["name"]
+    description = request.form["description"]
+    user_id = session["user_id"]
+    image_data = None
+    
+    if "image" in request.files:
+        image_file = request.files["image"]
+        if image_file.filename != "":
+            image_data = image_file.read()
 
-    if check_password_hash(password_hash, password):
-        session["username"] = username
+    location_id = marketplace.add_location(name, description, user_id, image_data)
+    return redirect("/location/" + str(location_id))
+
+@app.route("/edit/<int:location_id>", methods=["GET", "POST"])
+def edit_message(location_id):
+    location = marketplace.get_location(location_id)
+
+    if request.method == "GET":
+        return render_template("edit.html", location=location)
+
+    if request.method == "POST":
+        description = request.form["description"]
+        image_data = None
+        
+        if "image" in request.files:
+            image_file = request.files["image"]
+            if image_file.filename != "":
+                image_data = image_file.read()
+        
+        marketplace.update_location(location["id"], description, image_data)
+        return redirect("/location/" + str(location["id"]))
+
+@app.route("/remove/<int:location_id>", methods=["GET", "POST"])
+def remove_location(location_id):
+    location = marketplace.get_location(location_id)
+
+    if request.method == "GET":
+        return render_template("remove.html", location=location)
+
+    if request.method == "POST":
+        if "continue" in request.form:
+            marketplace.remove_location(location["id"])
         return redirect("/")
-    else:
-        return "VIRHE: väärä tunnus tai salasana"
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        sql = "SELECT password_hash FROM Users WHERE username = ?"
+        try:
+            password_hash = db.query(sql, [username])[0][0]
+        except:
+            return "VIRHE: käyttäjää ei ole olemassa"
+
+        user_id = users.check_login(username, password)
+
+        if user_id:
+            session["username"] = username
+            session["user_id"] = user_id
+            return redirect("/")
+        else:
+            return "VIRHE: väärä tunnus tai salasana"
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    session.clear()
     return redirect("/")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html")
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
+
+        if password1 != password2:
+            return "VIRHE: salasanat eivät ole samat"
+
+        try:
+            users.create_user(username, password1)
+            return "Tunnus luotu"
+        except sqlite3.IntegrityError:
+            return "VIRHE: tunnus on jo varattu"
 
 @app.route("/create", methods=["POST"])
 def create():
