@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS Messages (
 );
 
 CREATE TABLE IF NOT EXISTS Comments (
+    id INTEGER PRIMARY KEY,
     user_id INTEGER,
     comment TEXT,
     location_id INTEGER,

@@ -17,8 +17,8 @@ def index():
 @app.route("/location/<int:location_id>")
 def show_location(location_id):
     location = marketplace.get_location(location_id)
-    # messages = forum.get_messages(thread_id)
-    return render_template("location.html", location=location)
+    comments = marketplace.get_comments(location_id)
+    return render_template("location.html", location=location, comments=comments)
 
 @app.route("/location/<int:location_id>/image")
 def get_location_image(location_id):
@@ -134,7 +134,21 @@ def create():
     try:
         sql = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, [username, password_hash])
+        user_id = db.last_insert_id()
+        
+        # Automatically log in the user
+        session["username"] = username
+        session["user_id"] = user_id
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
     
     return redirect("/") 
+
+@app.route("/new_comment", methods=["POST"])
+def new_comment():
+    comment = request.form["content"]
+    location_id = request.form["location_id"]
+    user_id = session["user_id"]
+
+    marketplace.add_comment(comment, user_id, location_id)
+    return redirect("/location/" + str(location_id))
