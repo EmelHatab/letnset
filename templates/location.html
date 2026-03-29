@@ -96,13 +96,30 @@
         {% endif %}
     </div>
 
+    {% if comments %}
+    <div class="comments-section">
+      <h2>💬 Kommentit</h2>
+      {% for comment in comments %}
+      <div class="comment">
+        <div class="comment-header">
+          <span class="comment-author">👤 {{ comment.username }}</span>
+          <span class="comment-time">{{ comment.sent_at }}</span>
+        </div>
+        <p style="color: #d5c4a1; margin-top: 5px;">{{ comment.comment }}</p>
+      </div>
+      {% else %}
+      <p style="color: #d5c4a1;">Ei kommentteja. Ole ensimmäinen joka kommentoi!</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     {% if session.user_id %}
     <div class="form-section">
       <h2>💬 Uusi viesti</h2>
-      <form action="/new_message" method="post">
+      <form action="/new_comment" method="post">
         <div class="form-group">
-          <label for="content">Viesti</label>
-          <textarea id="content" name="content" required></textarea>
+          <label for="comment">Viesti</label>
+          <textarea id="comment" name="content" required></textarea>
         </div>
         <input type="hidden" name="location_id" value="{{ location.id }}" />
         <button type="submit" class="submit-btn">📤 Lähetä viesti</button>

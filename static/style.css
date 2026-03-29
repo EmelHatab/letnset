@@ -162,6 +162,7 @@ h2 {
 }
 
 .form-group input[type="text"],
+.form-group input[type="password"],
 .form-group textarea,
 .form-group input[type="file"] {
   width: 100%;
@@ -176,11 +177,13 @@ h2 {
 }
 
 .form-group input[type="text"]::placeholder,
+.form-group input[type="password"]::placeholder,
 .form-group textarea::placeholder {
   color: #928374;
 }
 
 .form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus,
 .form-group textarea:focus,
 .form-group input[type="file"]:focus {
   outline: none;
