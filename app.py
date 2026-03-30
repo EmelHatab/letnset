@@ -17,6 +17,9 @@ def index():
 @app.route("/location/<int:location_id>")
 def show_location(location_id):
     location = marketplace.get_location(location_id)
+    if not location:
+        return "Paikkaa ei löydy", 404
+
     comments = marketplace.get_comments(location_id)
     return render_template("location.html", location=location, comments=comments)
 
@@ -169,8 +172,9 @@ def remove_comment(comment_id):
 @app.route("/edit_comment/<int:comment_id>", methods=["GET", "POST"])
 def edit_comment(comment_id):
     comment = marketplace.get_comment(comment_id)
-    location_id = comment["location_id"]  # location_id is at index 3 in the comment tuple
+    location_id = comment["location_id"]
 
+    print(location_id)
     if request.method == "GET":
         return render_template("edit_comment.html", comment=comment)
 

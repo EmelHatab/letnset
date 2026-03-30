@@ -12,7 +12,10 @@ def get_location(location_id):
     sql = """SELECT l.id, l.name, l.description, l.user_id, l.image, u.username
              FROM locations l, users u
              WHERE l.user_id = u.id AND l.id = ?"""
-    return db.query(sql, [location_id])[0]
+    rows = db.query(sql, [location_id])
+    if not rows:
+        return None
+    return rows[0]
 
 def get_comments(location_id):
     sql = """SELECT c.id, c.comment, c.sent_at, c.user_id, u.username
@@ -26,7 +29,11 @@ def get_comments(location_id):
 
 def get_comment(comment_id):
     sql = "SELECT id, comment, user_id, location_id FROM comments WHERE id = ?"
-    return db.query(sql, [comment_id])[0]
+    rows = db.query(sql, [comment_id])[0]
+
+    if not rows:
+        return None
+    return rows
 
 def add_location(name, description, user_id, image_data=None):
     sql = "INSERT INTO locations (name, description, user_id, image) VALUES (?, ?, ?, ?)"
