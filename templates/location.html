@@ -107,9 +107,16 @@
         </div>
         <p style="color: #d5c4a1; margin-top: 5px;">{{ comment.comment }}</p>
       </div>
-      {% else %}
-      <p style="color: #d5c4a1;">Ei kommentteja. Ole ensimmäinen joka kommentoi!</p>
+      {% if comment.user_id == session.user_id %}
+      <p>
+        <a href="/edit_comment/{{ comment.id }}" class="submit-btn" style="background: #8ec07c; padding: 5px 10px; font-size: 0.8em;">✏️ Muokkaa kommentti</a>
+        <a href="/remove_comment/{{ comment.id }}" class="submit-btn" style="background: #d65d0e; padding: 5px 10px; font-size: 0.8em;" method="post">🗑️ Poista kommentti</a>
+      </p>
+      {% endif %}
+      <hr style="border-color: #504945; margin: 20px 0;" />
       {% endfor %}
+    {% else %}
+      <p style="color: #d5c4a1;">Ei kommentteja. Ole ensimmäinen joka kommentoi!</p>
     </div>
     {% endif %}
 

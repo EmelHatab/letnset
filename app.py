@@ -43,7 +43,7 @@ def new_location():
     return redirect("/location/" + str(location_id))
 
 @app.route("/edit/<int:location_id>", methods=["GET", "POST"])
-def edit_message(location_id):
+def edit(location_id):
     location = marketplace.get_location(location_id)
 
     if request.method == "GET":
@@ -152,3 +152,29 @@ def new_comment():
 
     marketplace.add_comment(comment, user_id, location_id)
     return redirect("/location/" + str(location_id))
+
+@app.route("/remove_comment/<int:comment_id>", methods=["GET", "POST"])
+def remove_comment(comment_id):
+    comment = marketplace.get_comment(comment_id)
+
+    if request.method == "GET":
+        return render_template("remove_comment.html", comment=comment)
+    
+    if request.method == "POST":
+        comment_id = comment["id"]
+        if "continue" in request.form:
+            marketplace.remove_comment(comment_id)
+        return redirect("/location/" + str(comment["location_id"]))
+
+@app.route("/edit_comment/<int:comment_id>", methods=["GET", "POST"])
+def edit_comment(comment_id):
+    comment = marketplace.get_comment(comment_id)
+    location_id = comment["location_id"]  # location_id is at index 3 in the comment tuple
+
+    if request.method == "GET":
+        return render_template("edit_comment.html", comment=comment)
+
+    if request.method == "POST":
+        new_content = request.form["content"]
+        marketplace.update_comment(comment_id, new_content)
+        return redirect("/location/" + str(location_id))

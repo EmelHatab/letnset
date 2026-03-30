@@ -17,16 +17,16 @@ def get_location(location_id):
 def get_comments(location_id):
     sql = """SELECT c.id, c.comment, c.sent_at, c.user_id, u.username
              FROM comments c, users u
-             WHERE c.user_id = u.id AND c.location_id = ?
+             WHERE c.user_id = u.id AND c.location_id = ? AND c.status = 1
              ORDER BY c.id"""
     try:
         return db.query(sql, [location_id])
     except:
         return []
 
-def get_message(message_id):
-    sql = "SELECT id, comment, user_id, location_id FROM messages WHERE id = ?"
-    return db.query(sql, [message_id])[0]
+def get_comment(comment_id):
+    sql = "SELECT id, comment, user_id, location_id FROM comments WHERE id = ?"
+    return db.query(sql, [comment_id])[0]
 
 def add_location(name, description, user_id, image_data=None):
     sql = "INSERT INTO locations (name, description, user_id, image) VALUES (?, ?, ?, ?)"
@@ -40,6 +40,10 @@ def add_comment(content, user_id, location_id):
              (?, ?, ?, datetime('now'))"""
     db.execute(sql, [content, user_id, location_id])
 
+def remove_comment(comment_id):
+    sql = "UPDATE Comments SET status = 0 WHERE id = ?"
+    db.execute(sql, [comment_id])
+
 def update_location(location_id, name, description, image_data=None):
     if image_data:
         sql = "UPDATE Locations SET name = ?, description = ?, image = ? WHERE id = ?"
@@ -51,3 +55,7 @@ def update_location(location_id, name, description, image_data=None):
 def remove_location(location_id):
     sql = "DELETE FROM locations WHERE id = ?"
     db.execute(sql, [location_id])
+
+def update_comment(comment_id, content):
+    sql = "UPDATE Comments SET comment = ? WHERE id = ?"
+    db.execute(sql, [content, comment_id])
