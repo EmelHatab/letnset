@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS Comments (
     comment TEXT,
     location_id INTEGER,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status INTEGER DEFAULT 1, -- 1: active, 0: deleted
     FOREIGN KEY (user_id)
         REFERENCES Users
     FOREIGN KEY (location_id)
