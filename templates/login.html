@@ -41,6 +41,17 @@
   <div class="container">
     <div class="auth-container">
       <h1>🔐 Kirjaudu sisään</h1>
+      
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div style="background: #d65d0e; color: #ebdbb2; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      
       <form action="/login" method="post">
         <div class="form-group">
           <label for="username">Tunnus</label>
