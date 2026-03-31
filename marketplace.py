@@ -13,9 +13,7 @@ def get_location(location_id):
              FROM locations l, users u
              WHERE l.user_id = u.id AND l.id = ?"""
     rows = db.query(sql, [location_id])
-    if not rows:
-        return None
-    return rows[0]
+    return rows[0] if rows else None
 
 def get_comments(location_id):
     sql = """SELECT c.id, c.comment, c.sent_at, c.user_id, u.username

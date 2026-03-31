@@ -28,7 +28,7 @@
     <div class="locations-grid">
       {% for location in locations %}
       <a href="/location/{{ location.id }}" class="location-card">
-        {% if location[3] %}
+        {% if location.image %}
         <img src="/location/{{ location.id }}/image" class="location-image" />
         {% else %}
         <div class="location-image"></div>
@@ -49,12 +49,12 @@
       <form action="/new_location" method="post" enctype="multipart/form-data">
         <div class="form-group">
           <label for="name">Otsikko</label>
-          <input type="text" id="name" name="name" required />
+          <input type="text" id="name" name="name" required maxlength="100"/>
         </div>
 
         <div class="form-group">
           <label for="description">Kuvaus</label>
-          <textarea id="description" name="description" required></textarea>
+          <textarea id="description" name="description" maxlength="5000"></textarea>
         </div>
 
         <div class="form-group">
