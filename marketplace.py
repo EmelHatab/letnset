@@ -34,7 +34,7 @@ def get_comment(comment_id):
     return rows
 
 def add_location(name, description, user_id, image_data=None):
-    sql = "INSERT INTO locations (name, description, user_id, image) VALUES (?, ?, ?, ?)"
+    sql = "INSERT INTO locations (name, description, user_id, image, created_at) VALUES (?, ?, ?, ?, datetime('now'))"
     db.execute(sql, [name, description, user_id, image_data])
     location_id = db.last_insert_id()
     # add_message(content, user_id, thread_id)
@@ -64,3 +64,12 @@ def remove_location(location_id):
 def update_comment(comment_id, content):
     sql = "UPDATE Comments SET comment = ? WHERE id = ?"
     db.execute(sql, [content, comment_id])
+
+def search_locations(query):
+    sql = """SELECT l.id, l.name, l.description, l.image, u.username, l.created_at
+             FROM locations l, users u
+             WHERE l.user_id = u.id AND (l.name LIKE ? OR l.description LIKE ?)
+             GROUP BY l.id
+             ORDER BY l.id DESC"""
+    like_query = f"%{query}%"
+    return db.query(sql, [like_query, like_query])

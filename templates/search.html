@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>LetnSet</title>
+  <title>LetnSet - Haku</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -25,20 +25,29 @@
       </div>
     </header>
 
-    <form action="/search" method="get">
-      <p>
-        Hakusana:
-        {%if query %}
-        <input type="text" name="query" value="{{ query }}" required />
-        {%else%}
-        <input type="text" name="query" required/>
-        {%endif%}
-        <button type="submit">Hae</button>
-      </p>
-    </form>
+    <div class="form-section">
+      <h2>🔎 Haku</h2>
+      <form action="/search" method="get">
+        <div class="form-group">
+          <label for="query">Hakusana</label>
+          {% if query %}
+          <input type="text" id="query" name="query" value="{{ query }}" required />
+          {% else %}
+          <input type="text" id="query" name="query" required />
+          {% endif %}
+        </div>
+        <button type="submit" class="submit-btn">Hae</button>
+        <a href="/" class="back-link">Etusivulle</a>
+      </form>
+    </div>
 
+    {% if query %}
+    <hr />
+    <h2>Tulokset</h2>
+
+    {% if results and results|length > 0 %}
     <div class="locations-grid">
-      {% for location in locations %}
+      {% for location in results %}
       <a href="/location/{{ location.id }}" class="location-card">
         {% if location.image %}
         <img src="/location/{{ location.id }}/image" class="location-image" />
@@ -53,30 +62,10 @@
       </a>
       {% endfor %}
     </div>
+    {% else %}
+    <p>Ei tuloksia haulle: "{{ query }}"</p>
+    {% endif %}
 
-    {% if session.user_id %}
-    <div class="form-section">
-      <h2>➕ Uusi ilmoitus</h2>
-
-      <form action="/new_location" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="name">Otsikko</label>
-          <input type="text" id="name" name="name" required maxlength="100"/>
-        </div>
-
-        <div class="form-group">
-          <label for="description">Kuvaus</label>
-          <textarea id="description" name="description" maxlength="5000"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="image">Kuva</label>
-          <input type="file" id="image" name="image" accept="image/*" />
-        </div>
-
-        <button type="submit" class="submit-btn">Lähetä ilmoitus</button>
-      </form>
-    </div>
     {% endif %}
   </div>
 </body>
