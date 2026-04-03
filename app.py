@@ -23,6 +23,12 @@ def index():
     locations = marketplace.get_locations()
     return render_template("index.html", locations=locations)
 
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    locations = marketplace.search_locations(query)
+    return render_template("search.html", results=locations, query=query)
+
 @app.route("/location/<int:location_id>")
 def show_location(location_id):
     location = marketplace.get_location(location_id)
@@ -46,7 +52,7 @@ def new_location():
     description = request.form["description"]
     image_data = None
 
-    if not name or name > 100 or description > 5000:
+    if not name or len(name) > 100 or len(description) > 5000:
         abort(403)
 
     user_id = session["user_id"]

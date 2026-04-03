@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS Locations (
     description TEXT,
     user_id INTEGER,
     image BLOB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id)
         REFERENCES Users
         ON DELETE CASCADE
