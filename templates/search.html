@@ -68,6 +68,17 @@
 
     {% endif %}
   </div>
+
+  <p>
+    {% if page > 1 %}
+    <a href="{{ url_for('search', page=page-1, query=query) }}">Edellinen</a>
+    {% endif %}
+    {% if page < page_count %}
+    <a href="{{ url_for('search', page=page+1, query=query) }}">Seuraava</a>
+    {% endif %}
+    <a href="{{ url_for('search', query=query) }}">Palaa alkuun</a>
+    <a href="{{ url_for('search', page=page_count, query=query) }}">Mene loppuun</a>
+  </p>
 </body>
 
 </html>

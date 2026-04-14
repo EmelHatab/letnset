@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, time, math
 from functools import wraps
 from flask import Flask
 from flask import redirect, render_template, request, session, Response, url_for, g, flash, abort
@@ -10,6 +10,17 @@ import config, db, users, marketplace
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    elapsed_time = time.time() - g.start_time
+    print(f"Request took {elapsed_time:.2f} seconds")
+    return response
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -19,15 +30,36 @@ def login_required(f):
     return decorated_function
 
 @app.route("/")
-def index():
-    locations = marketplace.get_locations()
-    return render_template("index.html", locations=locations)
+@app.route("/<int:page>")
+def index(page=1):
+    location_count = marketplace.location_count()
+    page_count =  math.ceil(location_count / config.page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1: 
+        return redirect("/")
+    if page > page_count: # Palauttaa käyttäjän vikalle sivulle, mikäli sivulukema ylittää maksimisivun
+        return redirect("/" + str(page_count))
+    
+    locations = marketplace.get_locations(page, config.page_size)
+    return render_template("index.html", page=page, page_count=page_count, locations=locations)
 
 @app.route("/search")
-def search():
+@app.route("/search/<int:page>")
+def search(page=1):
     query = request.args.get("query")
-    locations = marketplace.search_locations(query)
-    return render_template("search.html", results=locations, query=query)
+
+    location_count = marketplace.search_location_count(query)
+    page_count = math.ceil(location_count / config.page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect(url_for("search", query=query))
+    if page > page_count:
+        return redirect(url_for("search", page=page_count, query=query))
+
+    locations = marketplace.search_locations(query, page, config.page_size)
+    return render_template("search.html", results=locations, query=query, page=page, page_count=page_count)
 
 @app.route("/location/<int:location_id>")
 def show_location(location_id):

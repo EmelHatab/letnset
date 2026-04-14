@@ -79,6 +79,17 @@
     </div>
     {% endif %}
   </div>
+
+  <p>
+    {% if page > 1 %}
+    <a href="{{ url_for('index', page=page-1) }}">Edellinen</a>
+    {% endif %}
+    {% if page < page_count %}
+    <a href="{{ url_for('index', page=page+1) }}">Seuraava</a>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Palaa alkuun</a>
+    <a href="{{ url_for('index', page=page_count) }}">Mene loppuun</a>
+  </p>
 </body>
 
 </html>
