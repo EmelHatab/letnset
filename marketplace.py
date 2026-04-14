@@ -1,12 +1,28 @@
 import db
 
-def get_locations():
+def location_count():
+    sql = "SELECT COUNT(*) FROM locations"
+    rows = db.query(sql)
+    return rows[0][0] if rows else 0
+
+def search_location_count(query):
+    sql = """SELECT COUNT(*)
+             FROM locations l, users u
+             WHERE l.user_id = u.id AND (l.name LIKE ? OR l.description LIKE ?)"""
+    like_query = f"%{query}%"
+    rows = db.query(sql, [like_query, like_query])
+    return rows[0][0] if rows else 0
+
+def get_locations(page, page_size):
     sql = """SELECT l.id, l.name, l.description, l.image, u.username
              FROM locations l, users u
              WHERE l.user_id = u.id
              GROUP BY l.id
-             ORDER BY l.id DESC"""
-    return db.query(sql)
+             ORDER BY l.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = (page - 1) * page_size 
+    return db.query(sql, [limit, offset])
 
 def get_location(location_id):
     sql = """SELECT l.id, l.name, l.description, l.user_id, l.image, u.username
@@ -65,11 +81,14 @@ def update_comment(comment_id, content):
     sql = "UPDATE Comments SET comment = ? WHERE id = ?"
     db.execute(sql, [content, comment_id])
 
-def search_locations(query):
+def search_locations(query, page, page_size):
     sql = """SELECT l.id, l.name, l.description, l.image, u.username, l.created_at
              FROM locations l, users u
              WHERE l.user_id = u.id AND (l.name LIKE ? OR l.description LIKE ?)
              GROUP BY l.id
-             ORDER BY l.id DESC"""
+             ORDER BY l.name DESC
+             LIMIT ? OFFSET ?"""
     like_query = f"%{query}%"
-    return db.query(sql, [like_query, like_query])
+    limit = page_size
+    offset = (page - 1) * page_size 
+    return db.query(sql, [like_query, like_query, limit, offset])

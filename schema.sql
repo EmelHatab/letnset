@@ -79,3 +79,6 @@ CREATE TABLE IF NOT EXISTS Images (
         REFERENCES Locations
         ON DELETE CASCADE
 );
+
+CREATE INDEX idx_locations_user_id ON Locations(user_id);
+CREATE INDEX idx_comments_location_id ON Comments(location_id);
