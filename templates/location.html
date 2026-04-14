@@ -129,6 +129,7 @@
           <textarea id="comment" name="content" required></textarea>
         </div>
         <input type="hidden" name="location_id" value="{{ location.id }}" />
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         <button type="submit" class="submit-btn">📤 Lähetä viesti</button>
       </form>
     </div>

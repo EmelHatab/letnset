@@ -1,4 +1,4 @@
-import sqlite3, time, math
+import sqlite3, time, math, secrets
 from functools import wraps
 from flask import Flask
 from flask import redirect, render_template, request, session, Response, url_for, g, flash, abort
@@ -10,6 +10,9 @@ import config, db, users, marketplace
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
 
 @app.before_request
 def before_request():
@@ -38,7 +41,7 @@ def index(page=1):
 
     if page < 1: 
         return redirect("/")
-    if page > page_count: # Palauttaa käyttäjän vikalle sivulle, mikäli sivulukema ylittää maksimisivun
+    if page > page_count:
         return redirect("/" + str(page_count))
     
     locations = marketplace.get_locations(page, config.page_size)
@@ -80,6 +83,7 @@ def get_location_image(location_id):
 @app.route("/new_location", methods=["POST"])
 @login_required
 def new_location():
+    check_csrf()
     name = request.form["name"]
     description = request.form["description"]
     image_data = None
@@ -157,6 +161,7 @@ def login():
         if user_id:
             session["username"] = username
             session["user_id"] = user_id
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             flash("VIRHE: virheellinen käyttäjätunnus tai salasana")
@@ -207,6 +212,7 @@ def create():
         # Automatically log in the user
         session["username"] = username
         session["user_id"] = user_id
+        session["csrf_token"] = secrets.token_hex(16)
     except sqlite3.IntegrityError:
         flash("VIRHE: tunnus on jo varattu")
         return redirect("/register")
@@ -217,6 +223,7 @@ def create():
 @app.route("/new_comment", methods=["POST"])
 @login_required
 def new_comment():
+    check_csrf()
     comment = request.form["content"]
     location_id = request.form["location_id"]
 
@@ -263,6 +270,7 @@ def edit_comment(comment_id):
         return render_template("edit_comment.html", comment=comment)
 
     if request.method == "POST":
+        check_csrf()
         new_content = request.form["content"]
         if len(new_content) > 1000:
             abort(403)
