@@ -77,7 +77,7 @@
 
     <div class="location-detail">
       {% if location[4] %}
-      <img src="/location/{{ location.id }}/image" class="location-detail-image" />
+      <img src="/location/{{ location.id }}/image" alt="{{ location.name }} - Kuva" class="location-detail-image" />
       {% endif %}
 
       <p style="color: #d5c4a1; line-height: 1.8; margin-bottom: 20px;">
@@ -105,7 +105,7 @@
           <span class="comment-author">👤 {{ comment.username }}</span>
           <span class="comment-time">{{ comment.sent_at }}</span>
         </div>
-        <p style="color: #d5c4a1; margin-top: 5px;">{{ comment.comment }}</p>
+        <p style="color: #d5c4a1; margin-top: 5px;">{{ comment.comment | show_lines }}</p>
       </div>
       {% if comment.user_id == session.user_id %}
       <p>

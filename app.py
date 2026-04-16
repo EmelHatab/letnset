@@ -1,4 +1,4 @@
-import sqlite3, time, math, secrets
+import sqlite3, time, math, secrets, markupsafe
 from functools import wraps
 from flask import Flask
 from flask import redirect, render_template, request, session, Response, url_for, g, flash, abort
@@ -13,6 +13,12 @@ app.secret_key = config.secret_key
 def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 @app.before_request
 def before_request():
