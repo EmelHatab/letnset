@@ -84,6 +84,16 @@
         {{ location.description }}
       </p>
 
+      <p style="color: #d5c4a1; font-size: 0.9em;">
+        <strong>Kategoriat:</strong>
+        {% if tags %}
+          {% for tag in tags %}
+            <span style="background: #504945; color: #ebdbb2; padding: 3px 8px; border-radius: 3px; margin-right: 5px;">{{ tag.name }}</span>
+          {% endfor %}
+        {% else %}
+          Ei kategorioita
+        {% endif %}
+
       <div class="location-meta">
         <div>
           <div class="location-author">👤 Tekijä: {{ location.username }}</div>

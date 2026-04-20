@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>LetnSet</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="LetnSet Logo" class="logo" />
+        <h1>LetnSet</h1>
+      </div>
+      <div class="nav">
+        <ul>
+            <li><a href="/">Etusivu</a></li>
+            <li><a href="/search">Haku</a></li>
+            {% if session.user_id %}
+            <li><a href="/logout">Kirjaudu ulos</a></li>
+            {% else %}
+            <li><a href="/register">Luo tunnus</a></li>
+            <li><a href="/login">Kirjaudu sisään</a></li>
+            {% endif %}
+        </ul>
+             </div>
+    </header>
+
+<div class="title-section">
+  <h2>{% block title %}{% endblock %}</h2>
+</div>
+
+<div class="content">
+  {% block content %}
+  {% endblock %}
+</div>
+
+</body>
+
+
+</html>

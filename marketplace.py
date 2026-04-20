@@ -1,5 +1,9 @@
 import db
 
+def get_tags():
+    sql = "SELECT id, name FROM tags"
+    return db.query(sql)
+
 def location_count():
     sql = "SELECT COUNT(*) FROM locations"
     rows = db.query(sql)
@@ -31,6 +35,12 @@ def get_location(location_id):
     rows = db.query(sql, [location_id])
     return rows[0] if rows else None
 
+def get_location_tags(location_id):
+    sql = """SELECT t.id, t.name
+             FROM LocationTags lt, Tags t
+             WHERE lt.tag_id = t.id AND lt.location_id = ?"""
+    return db.query(sql, [location_id])
+
 def get_comments(location_id):
     sql = """SELECT c.id, c.comment, c.sent_at, c.user_id, u.username
              FROM comments c, users u
@@ -55,6 +65,10 @@ def add_location(name, description, user_id, image_data=None):
     location_id = db.last_insert_id()
     # add_message(content, user_id, thread_id)
     return location_id 
+
+def add_location_tag(location_id, tag_id):
+    sql = "INSERT INTO LocationTags (location_id, tag_id) VALUES (?, ?)"
+    db.execute(sql, [location_id, tag_id])
 
 def add_comment(content, user_id, location_id):
     sql = """INSERT INTO Comments (comment, user_id, location_id, sent_at) VALUES
