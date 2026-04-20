@@ -1,96 +1,84 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>LetnSet</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% block title %}Ilmoitukset{% endblock %}
 
-<body>
-  <div class="container">
-    <header>
-      <div class="header-left">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="LetnSet Logo" class="logo" />
-        <h1>LetnSet</h1>
-      </div>
-      <div class="nav">
-        {% if session.user_id %}
-        <a href="/logout">Kirjaudu ulos</a>
-        {% else %}
-        <a href="/register">Luo tunnus</a>
-        <a href="/login">Kirjaudu sisään</a>
-        {% endif %}
-      </div>
-    </header>
-
-    <form action="/search" method="get">
-      <p>
-        Hakusana:
-        {%if query %}
-        <input type="text" name="query" value="{{ query }}" required />
-        {%else%}
-        <input type="text" name="query" required/>
-        {%endif%}
-        <button type="submit">Hae</button>
-      </p>
-    </form>
-
-    <div class="locations-grid">
-      {% for location in locations %}
-      <a href="/location/{{ location.id }}" class="location-card">
-        {% if location.image %}
-        <img src="/location/{{ location.id }}/image" class="location-image" />
-        {% else %}
-        <div class="location-image"></div>
-        {% endif %}
-        <div class="location-content">
-          <div class="location-title">{{ location.name }}</div>
-          <div class="location-description">{{ location.description }}</div>
-          <div class="location-author">👤 {{ location.username }}</div>
-        </div>
-      </a>
-      {% endfor %}
-    </div>
-
-    {% if session.user_id %}
-    <div class="form-section">
-      <h2>➕ Uusi ilmoitus</h2>
-
-      <form action="/new_location" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="name">Otsikko</label>
-          <input type="text" id="name" name="name" required maxlength="100"/>
-          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="description">Kuvaus</label>
-          <textarea id="description" name="description" maxlength="5000"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="image">Kuva</label>
-          <input type="file" id="image" name="image" accept="image/*" />
-        </div>
-
-        <button type="submit" class="submit-btn">Lähetä ilmoitus</button>
-      </form>
-    </div>
-    {% endif %}
-  </div>
-
+{% block content %}
+<form class="search-box" action="/search" method="get">
   <p>
-    {% if page > 1 %}
-    <a href="{{ url_for('index', page=page-1) }}">Edellinen</a>
+    <label for="query">Hakusana:</label>
+    {% if query %}
+    <input type="text" id="query" name="query" value="{{ query }}" required />
+    {% else %}
+    <input type="text" id="query" name="query" required />
     {% endif %}
-    {% if page < page_count %}
-    <a href="{{ url_for('index', page=page+1) }}">Seuraava</a>
-    {% endif %}
-    <a href="{{ url_for('index') }}">Palaa alkuun</a>
-    <a href="{{ url_for('index', page=page_count) }}">Mene loppuun</a>
+    <button type="submit">Hae</button>
   </p>
-</body>
+</form>
 
-</html>
+<div class="locations-grid">
+  {% for location in locations %}
+  <a href="/location/{{ location.id }}" class="location-card">
+    {% if location.image %}
+    <img src="/location/{{ location.id }}/image" class="location-image" />
+    {% else %}
+    <div class="location-image"></div>
+    {% endif %}
+    <div class="location-content">
+      <div class="location-title">{{ location.name }}</div>
+      <div class="location-description">{{ location.description }}</div>
+      <div class="location-author">👤 {{ location.username }}</div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+{% if session.user_id %}
+<div class="form-section">
+  <h2>➕ Uusi ilmoitus</h2>
+
+  <form action="/new_location" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name">Otsikko</label>
+      <input type="text" id="name" name="name" required maxlength="100" />
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Kuvaus</label>
+      <textarea id="description" name="description" maxlength="5000"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="tags">Kategoria</label>
+      <select id="tags" name="tags" multiple>
+        <option value="">Valitse kategoria</option>
+        {% for tag in tags %}
+        <option value="{{ tag.id }}">
+          {% if tag.id in selected_tags %}selected{% endif %}
+          {{ tag.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="image">Kuva</label>
+      <input type="file" id="image" name="image" accept="image/*" />
+    </div>
+
+    <button type="submit" class="submit-btn">Lähetä ilmoitus</button>
+  </form>
+</div>
+{% endif %}
+
+<div class="page-links">
+  {% if page > 1 %}
+  <a href="{{ url_for('index', page=page-1) }}">Edellinen</a>
+  {% endif %}
+  {% if page < page_count %}
+  <a href="{{ url_for('index', page=page+1) }}">Seuraava</a>
+  {% endif %}
+  <a href="{{ url_for('index') }}">Palaa alkuun</a>
+  <a href="{{ url_for('index', page=page_count) }}">Mene loppuun</a>
+</div>
+{% endblock %}

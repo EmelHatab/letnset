@@ -50,8 +50,11 @@ def index(page=1):
     if page > page_count:
         return redirect("/" + str(page_count))
     
-    locations = marketplace.get_locations(page, config.page_size)
-    return render_template("index.html", page=page, page_count=page_count, locations=locations)
+    return render_template("index.html",
+                            page=page,
+                            page_count=page_count,
+                            locations=marketplace.get_locations(page, config.page_size),
+                            tags=marketplace.get_tags())
 
 @app.route("/search")
 @app.route("/search/<int:page>")
@@ -77,7 +80,7 @@ def show_location(location_id):
         return abort(404)
 
     comments = marketplace.get_comments(location_id)
-    return render_template("location.html", location=location, comments=comments)
+    return render_template("location.html", location=location, comments=comments, tags=marketplace.get_location_tags(location_id))
 
 @app.route("/location/<int:location_id>/image")
 def get_location_image(location_id):
@@ -92,6 +95,7 @@ def new_location():
     check_csrf()
     name = request.form["name"]
     description = request.form["description"]
+    tags = request.form.getlist("tags")
     image_data = None
 
     if not name or len(name) > 100 or len(description) > 5000:
@@ -105,6 +109,8 @@ def new_location():
             image_data = image_file.read()
 
     location_id = marketplace.add_location(name, description, user_id, image_data)
+    for tag_id in tags:
+        marketplace.add_location_tag(location_id, tag_id)
     return redirect("/location/" + str(location_id))
 
 @app.route("/edit/<int:location_id>", methods=["GET", "POST"])

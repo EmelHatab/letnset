@@ -16,20 +16,20 @@ CREATE TABLE IF NOT EXISTS Locations (
         ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Categories (
+CREATE TABLE IF NOT EXISTS Tags (
     id INTEGER PRIMARY KEY,
     name TEXT
 );
 
-CREATE TABLE IF NOT EXISTS LocationCategories (
+CREATE TABLE IF NOT EXISTS LocationTags (
     location_id INTEGER,
-    category_id INTEGER,
-    PRIMARY KEY (location_id, category_id),
+    tag_id INTEGER,
+    PRIMARY KEY (location_id, tag_id),
     FOREIGN KEY (location_id)
         REFERENCES Locations
         ON DELETE CASCADE,
-    FOREIGN KEY (category_id)
-        REFERENCES Categories
+    FOREIGN KEY (tag_id)
+        REFERENCES Tags
         ON DELETE CASCADE
 );
 
