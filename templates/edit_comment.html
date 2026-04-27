@@ -1,3 +1,7 @@
+{% extends "layout.html" %}
+{% block title %}Kommentin muokkaus{% endblock %}
+{% block content %}
+
  <form action="/edit/{{ comment.id }}" method="post">
     <p>
       Viesti:<br />
@@ -6,3 +10,5 @@
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä" />
   </form>
+
+{% endblock %}

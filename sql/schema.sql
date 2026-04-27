@@ -1,7 +1,9 @@
 CREATE TABLE IF NOT EXISTS Users (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE,
-    password_hash TEXT
+    password_hash TEXT,
+    image BLOB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS Locations (

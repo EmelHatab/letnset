@@ -200,7 +200,7 @@ def register():
 
         try:
             users.create_user(username, password1)
-            flash("Tunnus luotu")
+            flash("Käyttäjätunnus luotu onnistuneesti!", "success")
             return redirect("/login")
         except sqlite3.IntegrityError:
             flash("VIRHE: tunnus on jo varattu")
@@ -229,7 +229,7 @@ def create():
         flash("VIRHE: tunnus on jo varattu")
         return redirect("/register")
     
-    flash("Tunnus luotu onnistuneesti!")
+    flash("Käyttäjätunnus luotu onnistuneesti!", "success")
     return redirect("/") 
 
 @app.route("/new_comment", methods=["POST"])
@@ -267,6 +267,51 @@ def remove_comment(comment_id):
         if "continue" in request.form:
             marketplace.remove_comment(comment_id)
         return redirect("/location/" + str(comment["location_id"]))
+
+@app.route("/profile/<username>")
+def profile(username):
+    user = users.get_user_by_username(username)
+    if not user:
+        return abort(404)
+
+    return render_template("profile.html", user=user)
+
+@app.route("/profile/<username>/locations")
+@app.route("/profile/<username>/locations/<int:page>")
+def profile_locations(username, page=1):
+    user = users.get_user_by_username(username)
+    if not user:
+        return abort(404)
+
+    location_count = marketplace.location_count_by_user_id(user["id"])
+    page_count = math.ceil(location_count / config.page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect(url_for("profile_locations", username=username))
+    if page > page_count:
+        return redirect(url_for("profile_locations", username=username, page=page_count))
+    
+    locations = marketplace.get_locations_by_user_id(user["id"], page, config.page_size)
+
+    return render_template("profile_locations.html", user=user, locations=locations, page=page, page_count=page_count)
+
+@app.route("/profile/<username>/comments")
+def profile_comments(username): 
+    user = users.get_user_by_username(username)
+    if not user:
+        return abort(404)
+
+    comments = marketplace.get_comments_by_user_id(user["id"])
+    return render_template("profile_comments.html", user=user, comments=comments)
+
+@app.route("/profile/<username>/image")
+def profile_image(username):
+    user = users.get_user_by_username(username)
+    if not user:
+        return abort(404)
+
+    return send_file(user["image_path"], as_attachment=True)
 
 @app.route("/edit_comment/<int:comment_id>", methods=["GET", "POST"])
 @login_required

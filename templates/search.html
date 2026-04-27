@@ -1,29 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <title>LetnSet - Haku</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-  <div class="container">
-    <header>
-      <div class="header-left">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="LetnSet Logo" class="logo" />
-        <h1>LetnSet</h1>
-      </div>
-      <div class="nav">
-        {% if session.user_id %}
-        <a href="/logout">Kirjaudu ulos</a>
-        {% else %}
-        <a href="/register">Luo tunnus</a>
-        <a href="/login">Kirjaudu sisään</a>
-        {% endif %}
-      </div>
-    </header>
+{% extends "layout.html" %}
+{% block title %}Haku{% endblock %}
+{% block content %}
 
     <div class="form-section">
       <h2>🔎 Haku</h2>
@@ -69,7 +46,7 @@
     {% endif %}
   </div>
 
-  <p>
+  <div class="page-links">
     {% if page > 1 %}
     <a href="{{ url_for('search', page=page-1, query=query) }}">Edellinen</a>
     {% endif %}
@@ -78,7 +55,7 @@
     {% endif %}
     <a href="{{ url_for('search', query=query) }}">Palaa alkuun</a>
     <a href="{{ url_for('search', page=page_count, query=query) }}">Mene loppuun</a>
-  </p>
+  </div>
 </body>
 
-</html>
+{% endblock %}

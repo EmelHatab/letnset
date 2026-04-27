@@ -1,24 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>Ilmoituksen muokkaus</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .edit-form {
-      background: #3c3836;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      max-width: 600px;
-      margin: 0 auto;
-      margin-top: 20px;
-    }
-  </style>
-</head>
+{% block title %}Ilmoituksen muokkaus{% endblock %}
 
+{% block content %}
 <body>
   <div class="container">
     <header>
@@ -50,4 +34,4 @@
   </div>
 </body>
 
-</html>
+{% endblock %}

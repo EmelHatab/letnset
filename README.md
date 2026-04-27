@@ -25,9 +25,9 @@ $ pip install flask
 
 Luo tietokannan taulut ja lisää tarvittavat alkutiedot (kuten kategoriat):
 
-$ sqlite3 database.db < schema.sql
+$ sqlite3 database.db < sql/schema.sql
 
-$ sqlite3 database.db < data.sql
+$ sqlite3 database.db < sql/init.sql
 
 Voit käynnistää sovelluksen näin:
 
