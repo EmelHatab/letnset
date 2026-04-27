@@ -211,14 +211,21 @@ def create():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+    image_data = None
+
     if password1 != password2:
         flash("VIRHE: salasanat eivät ole samat")
         return redirect("/register")
     password_hash = generate_password_hash(password1)
 
+    if "image" in request.files:
+        image_file = request.files["image"]
+        if image_file.filename != "":
+            image_data = image_file.read()
+
     try:
-        sql = "INSERT INTO Users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        sql = "INSERT INTO Users (username, password_hash, image_data) VALUES (?, ?, ?)"
+        db.execute(sql, [username, password_hash, image_data])
         user_id = db.last_insert_id()
         
         # Automatically log in the user
@@ -304,6 +311,30 @@ def profile_comments(username):
 
     comments = marketplace.get_comments_by_user_id(user["id"])
     return render_template("profile_comments.html", user=user, comments=comments)
+
+@app.route("/profile/<username>/edit", methods=["GET", "POST"])
+@login_required
+def edit_profile(username):
+    if session["username"] != username:
+        return abort(403)
+
+    user = users.get_user_by_username(username)
+    if not user:
+        return abort(404)
+
+    if request.method == "GET":
+        return render_template("profile_edit.html", user=user)
+
+    if request.method == "POST":
+        image_data = None
+        
+        if "image" in request.files:
+            image_file = request.files["image"]
+            if image_file.filename != "":
+                image_data = image_file.read()
+        
+        users.update_profile_image(user["id"], image_data)
+        return redirect("/profile/" + username)
 
 @app.route("/profile/<username>/image")
 def profile_image(username):

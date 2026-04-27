@@ -1,19 +1,15 @@
 {% extends "layout.html" %}
 
-{% block title %}Ilmoituksen muokkaus{% endblock %}
+{% block title %}Käyttäjän profiilin muokkaus{% endblock %}
 
 {% block content %}
 <body>
     <div class="edit-form form-section">
-      <form action="/edit/{{ location.id }}" method="post" enctype="multipart/form-data">
+      <form action="/profile/{{ user.username }}/edit" method="post" enctype="multipart/form-data">
         <div class="form-group">
           <label for="name">Otsikko</label>
-          <input type="text" id="name" name="name" required value="{{ location.name }}" />
+          <input type="text" id="name" name="name" required value="{{ user.name }}" />
           <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-        </div>
-        <div class="form-group">
-          <label for="description">Kuvaus</label>
-          <textarea id="description" name="description" required>{{ location.description }}</textarea>
         </div>
         <div class="form-group">
           <label for="image">Kuva</label>
