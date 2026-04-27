@@ -22,3 +22,7 @@ def get_user_by_username(username):
     sql = "SELECT id, username, image FROM users WHERE username = ?"
     result = db.query(sql, [username])
     return result[0] if result else None
+
+def update_profile_image(user_id, image_data):
+    sql = "UPDATE users SET image = ? WHERE id = ?"
+    db.execute(sql, [image_data, user_id])
