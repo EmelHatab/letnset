@@ -17,3 +17,8 @@ def check_login(username, password):
             return user_id
 
     return None
+
+def get_user_by_username(username):
+    sql = "SELECT id, username, image FROM users WHERE username = ?"
+    result = db.query(sql, [username])
+    return result[0] if result else None

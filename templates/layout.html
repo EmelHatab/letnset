@@ -13,7 +13,7 @@
     <header>
       <div class="header-left">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="LetnSet Logo" class="logo" />
-        <h1>LetnSet</h1>
+        <h1> <a href="/">LetnSet</a></h1>
       </div>
       <div class="nav">
         <ul>
@@ -21,6 +21,7 @@
             <li><a href="/search">Haku</a></li>
             {% if session.user_id %}
             <li><a href="/logout">Kirjaudu ulos</a></li>
+            <li><a href="/profile/{{ session.username }}">Profiili</a></li>
             {% else %}
             <li><a href="/register">Luo tunnus</a></li>
             <li><a href="/login">Kirjaudu sisään</a></li>

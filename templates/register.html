@@ -1,41 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <title>Rekisteröinti</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .auth-container {
-      max-width: 400px;
-      margin: 60px auto;
-      background: #3c3836;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      border-left: 5px solid #8ec07c;
-    }
-    .auth-container h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .auth-links {
-      text-align: center;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #504945;
-    }
-    .auth-links a {
-      color: #fe8019;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .auth-links a:hover {
-      color: #fabd2f;
-    }
-  </style>
-</head>
+{% extends "layout.html" %}
+{% block title %}Rekisteröityminen{% endblock %}
+{% block content %}
 
 <body>
   <div class="container">
@@ -75,4 +40,4 @@
   </div>
 </body>
 
-</html>
+{ % endblock %}

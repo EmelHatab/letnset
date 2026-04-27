@@ -106,3 +106,27 @@ def search_locations(query, page, page_size):
     limit = page_size
     offset = (page - 1) * page_size 
     return db.query(sql, [like_query, like_query, limit, offset])
+
+def location_count_by_user_id(user_id):
+    sql = "SELECT COUNT(*) FROM locations WHERE user_id = ?"
+    rows = db.query(sql, [user_id])
+    return rows[0][0] if rows else 0
+
+def get_locations_by_user_id(user_id, page, page_size):
+    sql = """SELECT l.id, l.name, l.description, l.image, u.username
+             FROM locations l, users u
+             WHERE l.user_id = u.id AND l.user_id = ?
+             GROUP BY l.id
+             ORDER BY l.id DESC
+             LIMIT ? OFFSET ?"""
+
+    limit = page_size
+    offset = (page - 1) * page_size
+    return db.query(sql, [user_id, limit, offset])
+
+def get_comments_by_user_id(user_id):
+    sql = """SELECT c.id, c.comment, c.sent_at, c.location_id, l.name
+             FROM comments c, locations l
+             WHERE c.location_id = l.id AND c.user_id = ? AND c.status = 1
+             ORDER BY c.id DESC"""
+    return db.query(sql, [user_id])

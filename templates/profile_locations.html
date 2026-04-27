@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Käyttäjän {{ user.username }} ilmoitukset{% endblock %}
+{% block content %}
+
+
+<body>
+{% if locations and locations|length > 0 %}
+  <div class="locations-list">
+    {% for location in locations %}
+    <a href="/location/{{ location.id }}" class="location-item">
+      <div class="location-content">
+        <div class="location-title">{{ location.name }}</div>
+        <div class="location-description">{{ location.description }}</div>
+        <div class="location-author">{{ location.username }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Käyttäjällä ei ole ilmoituksia.</p>
+{% endif %}
+
+  <div class="page-links">
+    {% if page > 1 %}
+    <a href="{{ url_for('profile_locations', username=user.username, page=page-1) }}">Edellinen</a>
+    {% endif %}
+    {% if page < page_count %}
+    <a href="{{ url_for('profile_locations', username=user.username, page=page+1) }}">Seuraava</a>
+    {% endif %}
+    <a href="{{ url_for('profile_locations', username=user.username) }}">Palaa alkuun</a>
+    <a href="{{ url_for('profile_locations', username=user.username, page=page_count) }}">Mene loppuun</a>
+  </div>
+</body>
+
+{% endblock %}

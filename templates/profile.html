@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Käyttäjän {{ user.username }} profiili{% endblock %}
+{% block content %}
+
+{% if user.image %}
+  <img src="/profile/{{ user.username }}/image" alt="{{ user.username }} - Profiilikuva" class="profile-image" />
+{% endif %}
+
+<a href="/profile/{{ user.username }}/locations" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Ilmoitukset</a>
+<a href="/profile/{{ user.username }}/comments" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Kommentit</a>
+
+
+
+{% endblock %}
