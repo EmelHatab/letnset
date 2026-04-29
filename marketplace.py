@@ -10,17 +10,17 @@ def location_count():
     return rows[0][0] if rows else 0
 
 def search_location_count(query):
-    sql = """SELECT COUNT(*)
-             FROM locations l, users u
-             WHERE l.user_id = u.id AND (l.name LIKE ? OR l.description LIKE ?)"""
+    sql = """SELECT COUNT(DISTINCT l.id)
+             FROM locations l, users u, locationtags lt, tags t
+             WHERE l.user_id = u.id AND l.id = lt.location_id AND lt.tag_id = t.id AND (LOWER(l.name) LIKE LOWER(?) OR LOWER(l.description) LIKE LOWER(?) OR LOWER(t.name) LIKE LOWER(?))"""
     like_query = f"%{query}%"
-    rows = db.query(sql, [like_query, like_query])
+    rows = db.query(sql, [like_query, like_query, like_query])
     return rows[0][0] if rows else 0
 
 def get_locations(page, page_size):
-    sql = """SELECT l.id, l.name, l.description, l.image, u.username
-             FROM locations l, users u
-             WHERE l.user_id = u.id
+    sql = """SELECT l.id, l.name, l.description, l.image, u.username, t.name
+             FROM locations l, users u, locationtags lt, tags t
+             WHERE l.user_id = u.id AND l.id = lt.location_id AND lt.tag_id = t.id
              GROUP BY l.id
              ORDER BY l.id DESC
              LIMIT ? OFFSET ?"""
@@ -97,15 +97,15 @@ def update_comment(comment_id, content):
 
 def search_locations(query, page, page_size):
     sql = """SELECT l.id, l.name, l.description, l.image, u.username, l.created_at
-             FROM locations l, users u
-             WHERE l.user_id = u.id AND (l.name LIKE ? OR l.description LIKE ?)
+             FROM locations l, users u, locationtags lt, tags t
+             WHERE l.user_id = u.id AND l.id = lt.location_id AND lt.tag_id = t.id AND (LOWER(l.name) LIKE LOWER(?) OR LOWER(l.description) LIKE LOWER(?) OR LOWER(t.name) LIKE LOWER(?))
              GROUP BY l.id
              ORDER BY l.name DESC
              LIMIT ? OFFSET ?"""
     like_query = f"%{query}%"
     limit = page_size
     offset = (page - 1) * page_size 
-    return db.query(sql, [like_query, like_query, limit, offset])
+    return db.query(sql, [like_query, like_query, like_query, limit, offset])
 
 def location_count_by_user_id(user_id):
     sql = "SELECT COUNT(*) FROM locations WHERE user_id = ?"

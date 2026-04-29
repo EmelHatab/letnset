@@ -3,13 +3,13 @@ import sqlite3
 
 db = sqlite3.connect('database.db')
 
-db.execute("DELETE FROM Users")
-db.execute("DELETE FROM Locations")
-db.execute("DELETE FROM Comments")
+# db.execute("DELETE FROM Users")
+# db.execute("DELETE FROM Locations")
+# db.execute("DELETE FROM Comments")
 
-user_count = 1000
-location_count = 10**5
-comment_count = 10**6
+user_count = 10
+location_count = 10**4
+comment_count = 10**5
 
 for i in range(1, user_count + 1):
     db.execute("INSERT INTO Users(username) VALUES (?)",
