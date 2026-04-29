@@ -9,7 +9,6 @@
         <img src="{{ url_for('static', filename='logo.png') }}" alt="LetnSet Logo" class="logo" />
         <h1>{{ location.name }}</h1>
       </div>
-      <a href="/" class="back-link">← Takaisin</a>
     </header>
 
     <div class="location-detail">
@@ -35,12 +34,13 @@
         <div>
           <a href="/profile/{{ location.username }}" class="location-author">👤 Tekijä: {{ location.username }}</a>
         </div>
-        {% if location.user_id == session.user_id %}
         <div class="action-links">
+          <a href="/" class="back-link">← Takaisin</a>
+          {% if location.user_id == session.user_id %}
           <a href="/edit/{{ location.id }}">✏️ Muokkaa</a>
           <a href="/remove/{{ location.id }}" style="background: #d65d0e;">🗑️ Poista</a>
-        </div>
         {% endif %}
+        </div>
     </div>
 
     {% if comments %}

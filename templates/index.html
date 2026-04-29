@@ -51,7 +51,6 @@
     <div class="form-group">
       <label for="tags">Kategoria</label>
       <select id="tags" name="tags" multiple>
-        <option value="">Valitse kategoria</option>
         {% for tag in tags %}
         <option value="{{ tag.id }}">
           {% if tag.id in selected_tags %}selected{% endif %}

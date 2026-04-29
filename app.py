@@ -60,7 +60,6 @@ def index(page=1):
 @app.route("/search/<int:page>")
 def search(page=1):
     query = request.args.get("query")
-
     location_count = marketplace.search_location_count(query)
     page_count = math.ceil(location_count / config.page_size)
     page_count = max(page_count, 1)
@@ -224,7 +223,7 @@ def create():
             image_data = image_file.read()
 
     try:
-        sql = "INSERT INTO Users (username, password_hash, image_data) VALUES (?, ?, ?)"
+        sql = "INSERT INTO Users (username, password_hash, image) VALUES (?, ?, ?)"
         db.execute(sql, [username, password_hash, image_data])
         user_id = db.last_insert_id()
         

@@ -8,9 +8,9 @@
         <div class="form-group">
           <label for="query">Hakusana</label>
           {% if query %}
-          <input type="text" id="query" name="query" value="{{ query }}" required />
+          <input type="text" id="query" name="query" value="{{ query }}" />
           {% else %}
-          <input type="text" id="query" name="query" required />
+          <input type="text" id="query" name="query" />
           {% endif %}
         </div>
         <button type="submit" class="submit-btn">Hae</button>
@@ -34,6 +34,11 @@
         <div class="location-content">
           <div class="location-title">{{ location.name }}</div>
           <div class="location-description">{{ location.description }}</div>
+          <div class"location-tags">
+            {% for tag in location.tags %}
+            <span class="location-tag">{{ tag.name }}</span>
+            {% endfor %}
+          </div>
           <div class="location-author">👤 {{ location.username }}</div>
         </div>
       </a>
