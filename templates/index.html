@@ -30,7 +30,11 @@
     </div>
   </a>
   {% endfor %}
+  {% if not locations %}
+    <p>Ei ilmoituksia.</p>
+  {% endif %}
 </div>
+
 
 {% if session.user_id %}
 <div class="form-section">
