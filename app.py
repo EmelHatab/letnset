@@ -325,6 +325,12 @@ def edit_profile(username):
         return render_template("profile_edit.html", user=user)
 
     if request.method == "POST":
+        username = request.form["username"]
+        if username == "":
+            username = None
+        password = request.form["password"]
+        if password == "":
+            password = None
         image_data = None
         
         if "image" in request.files:
@@ -332,16 +338,16 @@ def edit_profile(username):
             if image_file.filename != "":
                 image_data = image_file.read()
         
-        users.update_profile_image(user["id"], image_data)
+        users.update_user_profile(user["id"], new_username=username, new_password=password, new_image_data=image_data)
+        flash("Profiili päivitetty onnistuneesti!", "success")
         return redirect("/profile/" + username)
 
 @app.route("/profile/<username>/image")
 def profile_image(username):
     user = users.get_user_by_username(username)
-    if not user:
-        return abort(404)
-
-    return send_file(user["image_path"], as_attachment=True)
+    if user and user["image"]:
+        return Response(user["image"], mimetype="image/jpeg")
+    abort(404)
 
 @app.route("/edit_comment/<int:comment_id>", methods=["GET", "POST"])
 @login_required

@@ -26,3 +26,20 @@ def get_user_by_username(username):
 def update_profile_image(user_id, image_data):
     sql = "UPDATE users SET image = ? WHERE id = ?"
     db.execute(sql, [image_data, user_id])
+
+def update_password(user_id, new_password):
+    password_hash = generate_password_hash(new_password)
+    sql = "UPDATE users SET password_hash = ? WHERE id = ?"
+    db.execute(sql, [password_hash, user_id])
+
+def update_username(user_id, new_username):
+    sql = "UPDATE users SET username = ? WHERE id = ?"
+    db.execute(sql, [new_username, user_id])
+
+def update_user_profile(user_id, new_username=None, new_password=None, new_image_data=None):
+    if new_username:
+        update_username(user_id, new_username)
+    if new_password:
+        update_password(user_id, new_password)
+    if new_image_data:
+        update_profile_image(user_id, new_image_data)
