@@ -4,7 +4,7 @@ import users
 def index_page_stats():
     return {
         "location_count": marketplace.location_count(),
-        "user_count": users.user_count()
+        "user_count": users.user_count(),
     }
 
 def profile_page_stats(user_id):

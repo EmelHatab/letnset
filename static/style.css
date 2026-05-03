@@ -492,3 +492,11 @@ hr {
   background: var(--success-bg);
 }
 
+.profile-page-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  object-fit: cover;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -172,8 +172,8 @@ def login():
         try:
             password_hash = db.query(sql, [username])[0][0]
         except:
-            abort(403)
-
+            flash("VIRHE: virheellinen käyttäjätunnus tai salasana")
+            return redirect("/login")
         user_id = users.check_login(username, password)
 
         if user_id:
@@ -378,6 +378,35 @@ def edit_comment(comment_id):
             abort(403)
         marketplace.update_comment(comment_id, new_content)
         return redirect("/location/" + str(location_id))
+
+@app.route("/category/<string:tag_name>")
+@app.route("/category/<string:tag_name>/<int:page>")
+def category(tag_name, page=1):
+    tag = marketplace.get_tag_by_name(tag_name)
+    if not tag:
+        return abort(404)
+    
+    location_count = marketplace.location_count_by_tag(tag["id"])
+    page_count = math.ceil(location_count / config.page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect(url_for("category", tag_name=tag["name"], page=1))
+    if page > page_count:
+        return redirect(url_for("category", tag_name=tag["name"], page=page_count))
+
+    locations = marketplace.get_locations_by_tag(tag["id"], page, config.page_size)
+    return render_template("category.html", 
+                          locations=locations, 
+                          tag=tag, 
+                          page=page, 
+                          page_count=page_count,
+                          tags=marketplace.get_tags())
+
+@app.route("/categories")
+def all_categories():
+    tags = marketplace.get_tags()
+    return render_template("all_categories.html", tags=tags)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

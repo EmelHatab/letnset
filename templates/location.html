@@ -29,10 +29,10 @@
           <a href="/profile/{{ location.username }}" class="location-author">👤 Tekijä: {{ location.username }}</a>
         </div>
         <div class="action-links">
-          <a href="/" class="back-link">← Takaisin</a>
+          <a href="/" class="submit-btn">Takaisin</a>
           {% if location.user_id == session.user_id %}
-          <a href="/edit/{{ location.id }}">✏️ Muokkaa</a>
-          <a href="/remove/{{ location.id }}" style="background: #d65d0e;">🗑️ Poista</a>
+          <a href="/edit/{{ location.id }}" class="submit-btn">Muokkaa</a>
+          <a href="/remove/{{ location.id }}" class="submit-btn">Poista</a>
           <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         {% endif %}
         </div>
@@ -40,10 +40,13 @@
 
     {% if comments %}
     <div class="comments-section">
-      <h2>💬 Kommentit</h2>
+      <h2>Kommentit</h2>
       {% for comment in comments %}
       <div class="comment">
         <div class="comment-header">
+          {% if comment.image %}
+          <img src="/profile/{{ comment.username }}/image" alt="{{ comment.username }} - Profiilikuva" class="comment-profile-image" />
+          {% endif %}
           <a href="/profile/{{ comment.username }}" class="author-link">👤 {{ comment.username }}</a>
           <span class="comment-time">{{ comment.sent_at }}</span>
         </div>
@@ -51,8 +54,8 @@
       </div>
       {% if comment.user_id == session.user_id %}
       <p>
-        <a href="/edit_comment/{{ comment.id }}" class="submit-btn" style="padding: 5px 10px; font-size: 0.8em;">✏️ Muokkaa kommentti</a>
-        <a href="/remove_comment/{{ comment.id }}" class="submit-btn" style="padding: 5px 10px; font-size: 0.8em;" method="post">🗑️ Poista kommentti</a>
+        <a href="/edit_comment/{{ comment.id }}" class="submit-btn" style="margin: 5px; padding: 5px 10px; font-size: 0.8em;">Muokkaa kommentti</a>
+        <a href="/remove_comment/{{ comment.id }}" class="submit-btn" style="margin: 5px; padding: 5px 10px; font-size: 0.8em;" method="post">Poista kommentti</a>
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
       </p>
       {% endif %}
@@ -65,7 +68,7 @@
 
     {% if session.user_id %}
     <div class="form-section">
-      <h2>💬 Uusi viesti</h2>
+      <h2>Uusi viesti</h2>
       <form action="/new_comment" method="post">
         <div class="form-group">
           <label for="comment">Viesti</label>
@@ -73,7 +76,7 @@
         </div>
         <input type="hidden" name="location_id" value="{{ location.id }}" />
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-        <button type="submit" class="submit-btn">📤 Lähetä viesti</button>
+        <button type="submit" class="submit-btn">Lähetä viesti</button>
       </form>
     </div>
     {% endif %}

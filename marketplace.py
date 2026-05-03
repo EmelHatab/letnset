@@ -4,6 +4,16 @@ def get_tags():
     sql = "SELECT id, name FROM tags"
     return db.query(sql)
 
+def get_tag_by_id(tag_id):
+    sql = "SELECT id, name FROM tags WHERE id = ?"
+    rows = db.query(sql, [tag_id])
+    return rows[0] if rows else None
+
+def get_tag_by_name(tag_name):
+    sql = "SELECT id, name FROM tags WHERE LOWER(name) = LOWER(?)"
+    rows = db.query(sql, [tag_name])
+    return rows[0] if rows else None
+
 def location_count():
     sql = "SELECT COUNT(*) FROM locations"
     rows = db.query(sql)
@@ -18,7 +28,7 @@ def search_location_count(query):
     return rows[0][0] if rows else 0
 
 def get_locations(page, page_size):
-    sql = """SELECT l.id, l.name, l.description, l.image, u.username
+    sql = """SELECT l.id, l.name, l.description, l.image, u.username, l.created_at
              FROM locations l, users u
              WHERE l.user_id = u.id
              GROUP BY l.id
@@ -140,3 +150,21 @@ def user_comment_count(user_id):
     sql = "SELECT COUNT(*) FROM comments WHERE user_id = ? AND status = 1"
     rows = db.query(sql, [user_id])
     return rows[0][0] if rows else 0
+
+def location_count_by_tag(tag_id):
+    sql = """SELECT COUNT(DISTINCT l.id)
+             FROM locations l, LocationTags lt
+             WHERE l.id = lt.location_id AND lt.tag_id = ?"""
+    rows = db.query(sql, [tag_id])
+    return rows[0][0] if rows else 0
+
+def get_locations_by_tag(tag_id, page, page_size):
+    sql = """SELECT l.id, l.name, l.description, l.image, u.username, l.created_at
+             FROM locations l, users u, LocationTags lt
+             WHERE l.user_id = u.id AND l.id = lt.location_id AND lt.tag_id = ?
+             GROUP BY l.id
+             ORDER BY l.id DESC
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = (page - 1) * page_size
+    return db.query(sql, [tag_id, limit, offset])
