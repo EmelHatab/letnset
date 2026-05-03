@@ -12,12 +12,13 @@
   <div class="container">
     <header>
       <div class="header-left">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="LetnSet Logo" class="logo" />
+        <img src="{{ url_for('static', filename='logo.svg') }}" alt="LetnSet Logo" class="logo" />
         <h1> <a href="/">LetnSet</a></h1>
       </div>
       <div class="nav">
         <ul>
             <li><a href="/">Etusivu</a></li>
+            <li><a href="/categories">Kategoriat</a></li>
             <li><a href="/search">Haku</a></li>
             {% if session.user_id %}
             <li><a href="/create_location">Lisää paikka</a></li>

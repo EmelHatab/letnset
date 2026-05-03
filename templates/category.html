@@ -1,16 +1,8 @@
 {% extends "layout.html" %}
 
-{% block title %}Ilmoitukset{% endblock %}
+{% block title %}Kategoria: {{ tag.name }}{% endblock %}
 
 {% block content %}
-
-
-<div class="stats">
-  <p><strong> Tilastot: </strong></p>
-  <p>Ilmoituksia yhteensä: {{ stats.location_count }}</p>
-  <p>Käyttäjiä yhteensä: {{ stats.user_count}}</p>
-</div>
-
 <div class="locations-grid">
   {% for location in locations %}
   <a href="/location/{{ location.id }}" class="location-card">
@@ -24,32 +16,26 @@
       <div class="location-description">{{ location.description }}</div>
       <div class="location-created">{{ location.created_at }}</div>
       <div class="location-author">{{ location.username }}</div>
-      <div class="location-tags">
-        {% for tag in location.tags %}
-        <span class="location-tag">{{ tag }}</span>
-        {% endfor %}
-      </div>
     </div>
   </a>
   {% endfor %}
   {% if not locations %}
-    <p>Ei ilmoituksia.</p>
+    <p>Ei ilmoituksia tässä kategoriassa.</p>
   {% endif %}
 </div>
 
-
 <div class="page-links">
-    {% if page_count > 1 and page != 1 %}
-    <a href="{{ url_for('index', query=query) }}">Palaa alkuun</a>
-    {% endif %}
+  {% if page_count > 1 and page != 1 %}
+  <a href="{{ url_for('categories', tag_id=tag.id) }}">Palaa alkuun</a>
+  {% endif %}
   {% if page > 1 %}
-  <a href="{{ url_for('index', page=page-1) }}">Edellinen</a>
+  <a href="{{ url_for('categories', tag_id=tag.id, page=page-1) }}">Edellinen</a>
   {% endif %}
   {% if page < page_count %}
-  <a href="{{ url_for('index', page=page+1) }}">Seuraava</a>
+  <a href="{{ url_for('categories', tag_id=tag.id, page=page+1) }}">Seuraava</a>
   {% endif %}
   {% if page_count > 1 and page != page_count %}
-  <a href="{{ url_for('index', page=page_count) }}">Mene loppuun</a>
+  <a href="{{ url_for('categories', tag_id=tag.id, page=page_count) }}">Mene loppuun</a>
   {% endif %}
 </div>
 {% endblock %}

@@ -33,7 +33,8 @@
         <div class="location-content">
           <div class="location-title">{{ location.name }}</div>
           <div class="location-description">{{ location.description }}</div>
-          <div class"location-tags">
+          <div class="location-created">{{ location.created_at }}</div>
+          <div class="location-tags">
             {% for tag in location.tags %}
             <span class="location-tag">{{ tag.name }}</span>
             {% endfor %}
@@ -51,14 +52,18 @@
   </div>
 
   <div class="page-links">
+    {% if page_count > 1 and page != 1 %}
+    <a href="{{ url_for('search', query=query) }}">Palaa alkuun</a>
+    {% endif %}
     {% if page > 1 %}
     <a href="{{ url_for('search', page=page-1, query=query) }}">Edellinen</a>
     {% endif %}
     {% if page < page_count %}
     <a href="{{ url_for('search', page=page+1, query=query) }}">Seuraava</a>
     {% endif %}
-    <a href="{{ url_for('search', query=query) }}">Palaa alkuun</a>
+    {% if page_count > 1 and page != page_count %}
     <a href="{{ url_for('search', page=page_count, query=query) }}">Mene loppuun</a>
+    {% endif %}
   </div>
 </body>
 

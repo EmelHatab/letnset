@@ -8,7 +8,7 @@
       <form action="/login" method="post">
         <div class="form-group">
           <label for="username">Tunnus</label>
-          <input type="text" id="username" name="username" required />
+          <input type="text" id="username" name="username" value="{% if username %}{{ username }}{% else %}{{ '' }}{% endif %}" required />
         </div>
         <div class="form-group">
           <label for="password">Salasana</label>
@@ -18,7 +18,7 @@
       </form>
       <div class="auth-links">
         <p>Eikö tunnusta? <a href="/register">Luo uusi</a></p>
-        <p><a href="/">← Etusivulle</a></p>
+        <p><a href="/">Etusivulle</a></p>
       </div>
     </div>
   </div>

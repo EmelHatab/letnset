@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}Kategoriat{% endblock %}
+
+{% block content %}
+
+<div class="categories-list" style="text-align: center">
+  {% for tag in tags %}
+  <a href="/category/{{ tag.name | lower }}" class="submit-btn category-link" style="font-size:1.2em; margin: 10px; display: inline-block;">
+    {{ tag.name }}
+  </a>
+  {% endfor %}
+  {% if not tags %}
+    <p>Ei kategorioita.</p>
+  {% endif %}
+</div>
+{% endblock %}
