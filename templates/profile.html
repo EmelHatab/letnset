@@ -6,8 +6,13 @@
   <img src="/profile/{{ user.username }}/image" alt="{{ user.username }} - Profiilikuva" class="profile-image" />
 {% endif %}
 
-<a href="/profile/{{ user.username }}/locations" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Ilmoitukset</a>
-<a href="/profile/{{ user.username }}/comments" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Kommentit</a>
+
+<a href="/profile/{{ user.username }}/locations" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Ilmoitukset - {{ stats.user_location_count }}</a>
+<a href="/profile/{{ user.username }}/comments" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Kommentit - {{ stats.user_comment_count }}</a>
+{% if session.user_id == user.id %}
 <a href="/profile/{{ user.username }}/edit" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Muokkaa profiilia</a>
+{% endif %}
+
+<p>Liittynyt: {{ stats.user_creation_date }}</p>
 
 {% endblock %}

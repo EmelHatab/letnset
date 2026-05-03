@@ -15,6 +15,12 @@
   </p>
 </form>
 
+<div class="stats">
+  <p><strong> Tilastot: </strong></p>
+  <p>Ilmoituksia yhteensä: {{ stats.location_count }}</p>
+  <p>Käyttäjiä yhteensä: {{ stats.user_count}}</p>
+</div>
+
 <div class="locations-grid">
   {% for location in locations %}
   <a href="/location/{{ location.id }}" class="location-card">
@@ -27,6 +33,11 @@
       <div class="location-title">{{ location.name }}</div>
       <div class="location-description">{{ location.description }}</div>
       <div class="location-author">{{ location.username }}</div>
+      <div class="location-tags">
+        {% for tag in location.tags %}
+        <span class="location-tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
     </div>
   </a>
   {% endfor %}

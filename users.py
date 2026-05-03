@@ -43,3 +43,13 @@ def update_user_profile(user_id, new_username=None, new_password=None, new_image
         update_password(user_id, new_password)
     if new_image_data:
         update_profile_image(user_id, new_image_data)
+
+def user_count():
+    sql = "SELECT COUNT(*) FROM users"
+    rows = db.query(sql)
+    return rows[0][0] if rows else 0
+
+def get_user_creation_date(user_id):
+    sql = "SELECT created_at FROM users WHERE id = ?"
+    rows = db.query(sql, [user_id])
+    return rows[0][0] if rows else None

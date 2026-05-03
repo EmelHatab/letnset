@@ -5,7 +5,7 @@ from flask import redirect, render_template, request, session, Response, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-import config, db, users, marketplace
+import config, db, users, marketplace, statistics
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -44,6 +44,8 @@ def index(page=1):
     location_count = marketplace.location_count()
     page_count =  math.ceil(location_count / config.page_size)
     page_count = max(page_count, 1)
+    print(location_count, page_count, "page:", page)
+    stats = statistics.index_page_stats()
 
     if page < 1: 
         return redirect("/")
@@ -54,7 +56,8 @@ def index(page=1):
                             page=page,
                             page_count=page_count,
                             locations=marketplace.get_locations(page, config.page_size),
-                            tags=marketplace.get_tags())
+                            tags=marketplace.get_tags(),
+                            stats=stats)
 
 @app.route("/search")
 @app.route("/search/<int:page>")
@@ -70,7 +73,7 @@ def search(page=1):
         return redirect(url_for("search", page=page_count, query=query))
 
     locations = marketplace.search_locations(query, page, config.page_size)
-    return render_template("search.html", results=locations, query=query, page=page, page_count=page_count)
+    return render_template("search.html", results=locations, query=query, page=page, page_count=page_count, location_count=location_count)
 
 @app.route("/location/<int:location_id>")
 def show_location(location_id):
@@ -279,8 +282,9 @@ def profile(username):
     user = users.get_user_by_username(username)
     if not user:
         return abort(404)
+    stats = statistics.profile_page_stats(user["id"])
 
-    return render_template("profile.html", user=user)
+    return render_template("profile.html", user=user, stats=stats)
 
 @app.route("/profile/<username>/locations")
 @app.route("/profile/<username>/locations/<int:page>")

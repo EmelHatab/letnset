@@ -11,16 +11,16 @@ def location_count():
 
 def search_location_count(query):
     sql = """SELECT COUNT(DISTINCT l.id)
-             FROM locations l, users u, locationtags lt, tags t
-             WHERE l.user_id = u.id AND l.id = lt.location_id AND lt.tag_id = t.id AND (LOWER(l.name) LIKE LOWER(?) OR LOWER(l.description) LIKE LOWER(?) OR LOWER(t.name) LIKE LOWER(?))"""
+             FROM locations l, users u
+             WHERE l.user_id = u.id AND (LOWER(l.name) LIKE LOWER(?) OR LOWER(l.description) LIKE LOWER(?) OR LOWER(u.username) LIKE LOWER(?))"""
     like_query = f"%{query}%"
     rows = db.query(sql, [like_query, like_query, like_query])
     return rows[0][0] if rows else 0
 
 def get_locations(page, page_size):
-    sql = """SELECT l.id, l.name, l.description, l.image, u.username, t.name
-             FROM locations l, users u, locationtags lt, tags t
-             WHERE l.user_id = u.id AND l.id = lt.location_id AND lt.tag_id = t.id
+    sql = """SELECT l.id, l.name, l.description, l.image, u.username
+             FROM locations l, users u
+             WHERE l.user_id = u.id
              GROUP BY l.id
              ORDER BY l.id DESC
              LIMIT ? OFFSET ?"""
@@ -97,8 +97,8 @@ def update_comment(comment_id, content):
 
 def search_locations(query, page, page_size):
     sql = """SELECT l.id, l.name, l.description, l.image, u.username, l.created_at
-             FROM locations l, users u, locationtags lt, tags t
-             WHERE l.user_id = u.id AND l.id = lt.location_id AND lt.tag_id = t.id AND (LOWER(l.name) LIKE LOWER(?) OR LOWER(l.description) LIKE LOWER(?) OR LOWER(t.name) LIKE LOWER(?))
+             FROM locations l, users u
+             WHERE l.user_id = u.id AND (LOWER(l.name) LIKE LOWER(?) OR LOWER(l.description) LIKE LOWER(?) OR LOWER(u.username) LIKE LOWER(?))
              GROUP BY l.id
              ORDER BY l.name DESC
              LIMIT ? OFFSET ?"""
@@ -125,8 +125,18 @@ def get_locations_by_user_id(user_id, page, page_size):
     return db.query(sql, [user_id, limit, offset])
 
 def get_comments_by_user_id(user_id):
-    sql = """SELECT c.id, c.comment, c.sent_at, c.location_id, l.name
+    sql = """SELECT c.id, c.comment, c.sent_at, c.location_id, l.name AS location_name
              FROM comments c, locations l
              WHERE c.location_id = l.id AND c.user_id = ? AND c.status = 1
              ORDER BY c.id DESC"""
     return db.query(sql, [user_id])
+
+def user_location_count(user_id):
+    sql = "SELECT COUNT(*) FROM locations WHERE user_id = ?"
+    rows = db.query(sql, [user_id])
+    return rows[0][0] if rows else 0
+
+def user_comment_count(user_id):
+    sql = "SELECT COUNT(*) FROM comments WHERE user_id = ? AND status = 1"
+    rows = db.query(sql, [user_id])
+    return rows[0][0] if rows else 0
