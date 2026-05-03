@@ -24,6 +24,7 @@
           <label for="image">Profiilikuva</label>
           <input type="file" id="image" name="image" accept="image/*" />
         </div>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         <button type="submit" class="submit-btn" style="width: 100%;">Luo tunnus</button>
       </form>
       <div class="auth-links">
