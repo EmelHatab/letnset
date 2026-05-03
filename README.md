@@ -16,7 +16,7 @@
 
 - Käyttäjä pystyy valitsemaan lokaatiolle yhden tai useamman luokittelun (esim. teollinen, retro, moderni).
 
-- Käyttäjä pystyy lähettämään lokaatioon liittyviä varauskyselyitä tai viestejä omistajalle, sekä jättämään ilmoituksille palautetta kommenttien ja arvosanojen muodossa.
+- Käyttäjä pystyy lähettämään lokaatioon liittyviä varauskyselyitä tai viestejä omistajalle, sekä jättämään ilmoituksille palautetta kommenttien muodossa.
 
 # Sovelluksen asennus
 Asenna tarvittava flask-kirjasto:
