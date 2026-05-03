@@ -47,44 +47,6 @@
 </div>
 
 
-{% if session.user_id %}
-<div class="form-section">
-  <h2>➕ Uusi ilmoitus</h2>
-
-  <form action="/new_location" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-      <label for="name">Otsikko</label>
-      <input type="text" id="name" name="name" required maxlength="100" />
-      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    </div>
-
-    <div class="form-group">
-      <label for="description">Kuvaus</label>
-      <textarea id="description" name="description" maxlength="5000"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="tags">Kategoria</label>
-      <select id="tags" name="tags" multiple>
-        {% for tag in tags %}
-        <option value="{{ tag.id }}">
-          {% if tag.id in selected_tags %}selected{% endif %}
-          {{ tag.name }}
-        </option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="image">Kuva</label>
-      <input type="file" id="image" name="image" accept="image/*" />
-    </div>
-
-    <button type="submit" class="submit-btn">Lähetä ilmoitus</button>
-  </form>
-</div>
-{% endif %}
-
 <div class="page-links">
   {% if page > 1 %}
   <a href="{{ url_for('index', page=page-1) }}">Edellinen</a>

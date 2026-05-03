@@ -33,6 +33,7 @@
           {% if location.user_id == session.user_id %}
           <a href="/edit/{{ location.id }}">✏️ Muokkaa</a>
           <a href="/remove/{{ location.id }}" style="background: #d65d0e;">🗑️ Poista</a>
+          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         {% endif %}
         </div>
     </div>
@@ -52,6 +53,7 @@
       <p>
         <a href="/edit_comment/{{ comment.id }}" class="submit-btn" style="padding: 5px 10px; font-size: 0.8em;">✏️ Muokkaa kommentti</a>
         <a href="/remove_comment/{{ comment.id }}" class="submit-btn" style="padding: 5px 10px; font-size: 0.8em;" method="post">🗑️ Poista kommentti</a>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
       </p>
       {% endif %}
       <hr style="margin: 20px 0;" />

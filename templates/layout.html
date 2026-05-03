@@ -20,8 +20,9 @@
             <li><a href="/">Etusivu</a></li>
             <li><a href="/search">Haku</a></li>
             {% if session.user_id %}
-            <li><a href="/logout">Kirjaudu ulos</a></li>
+            <li><a href="/create_location">Lisää paikka</a></li>
             <li><a href="/profile/{{ session.username }}">Profiili</a></li>
+            <li><a href="/logout">Kirjaudu ulos</a></li>
             {% else %}
             <li><a href="/register">Luo tunnus</a></li>
             <li><a href="/login">Kirjaudu sisään</a></li>

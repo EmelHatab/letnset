@@ -8,7 +8,8 @@
       <textarea name="content" rows="5" cols="40">{{ comment.content }}</textarea>
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Lähetä" />
+    <input type="submit" class="submit-btn" value="Lähetä" />
+    <a href="/location/{{ comment.location_id }}" class="submit-btn">Peruuta</a>
   </form>
 
 {% endblock %}

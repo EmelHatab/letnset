@@ -59,6 +59,10 @@ def index(page=1):
                             tags=marketplace.get_tags(),
                             stats=stats)
 
+@app.route("/create_location", methods=["GET"])
+def create_location():
+    return render_template("create_location.html", tags=marketplace.get_tags())
+
 @app.route("/search")
 @app.route("/search/<int:page>")
 def search(page=1):
@@ -367,6 +371,7 @@ def edit_comment(comment_id):
         return render_template("edit_comment.html", comment=comment)
 
     if request.method == "POST":
+        print("editing comment", comment_id)
         check_csrf()
         new_content = request.form["content"]
         if len(new_content) > 1000:
