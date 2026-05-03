@@ -3,7 +3,6 @@
 {% block content %}
 
     <div class="form-section">
-      <h2>🔎 Haku</h2>
       <form action="/search" method="get">
         <div class="form-group">
           <label for="query">Hakusana</label>
@@ -20,7 +19,7 @@
 
     {% if query %}
     <hr />
-    <h2>Tulokset</h2>
+    <h2>Tulokset: {{ location_count }}</h2>
 
     {% if results and results|length > 0 %}
     <div class="locations-grid">

@@ -4,6 +4,7 @@
 
 
 <body>
+<a href="/profile/{{ user.username }}" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Palaa profiiliin</a>
 {% if locations and locations|length > 0 %}
   <div class="locations-list">
     {% for location in locations %}

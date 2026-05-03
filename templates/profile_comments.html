@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Käyttäjän {{ user.username }} kommentit{% endblock %}
+{% block content %}
+
+
+<body>
+<a href="/profile/{{ user.username }}" class="submit-btn" style="padding: 10px 20px; font-size: 1em;">Palaa profiiliin</a>
+{% if comments and comments|length > 0 %}
+  <div class="comments-list">
+    {% for comment in comments %}
+    <div class="comment-item">
+      <div class="comment-content">
+        <div class="comment-text">{{ comment.comment | show_lines }}</div>
+        <div class="comment-sent_at">Sent: {{ comment.sent_at }}</div>
+        <a href="/location/{{ comment.location_id }}" class="comment-location-link">Lähde: {{ comment.location_name }}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Käyttäjällä ei ole kommentteja.</p>
+{% endif %}
+</body>
+
+{% endblock %}
