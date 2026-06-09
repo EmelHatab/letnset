@@ -146,6 +146,7 @@ def edit(location_id):
 @app.route("/remove/<int:location_id>", methods=["GET", "POST"])
 @login_required
 def remove_location(location_id):
+    check_csrf()
     location = marketplace.get_location(location_id)
 
     if not location or location["user_id"] != session["user_id"]:
@@ -267,6 +268,7 @@ def new_comment():
 @app.route("/remove_comment/<int:comment_id>", methods=["GET", "POST"])
 @login_required
 def remove_comment(comment_id):
+    check_csrf()
     comment = marketplace.get_comment(comment_id)
 
     if not comment or comment["user_id"] != session["user_id"]:
