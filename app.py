@@ -130,6 +130,8 @@ def edit(location_id):
     if request.method == "GET":
         return render_template("edit.html", location=location)
 
+    check_csrf()
+
     if request.method == "POST":
         description = request.form["description"]
         name = request.form["name"]
@@ -146,7 +148,6 @@ def edit(location_id):
 @app.route("/remove/<int:location_id>", methods=["GET", "POST"])
 @login_required
 def remove_location(location_id):
-    check_csrf()
     location = marketplace.get_location(location_id)
 
     if not location or location["user_id"] != session["user_id"]:
@@ -154,6 +155,8 @@ def remove_location(location_id):
 
     if request.method == "GET":
         return render_template("remove.html", location=location)
+
+    check_csrf()
 
     if request.method == "POST":
         if "continue" in request.form:
@@ -268,7 +271,6 @@ def new_comment():
 @app.route("/remove_comment/<int:comment_id>", methods=["GET", "POST"])
 @login_required
 def remove_comment(comment_id):
-    check_csrf()
     comment = marketplace.get_comment(comment_id)
 
     if not comment or comment["user_id"] != session["user_id"]:
@@ -276,6 +278,8 @@ def remove_comment(comment_id):
 
     if request.method == "GET":
         return render_template("remove_comment.html", comment=comment)
+
+    check_csrf()
     
     if request.method == "POST":
         comment_id = comment["id"]
@@ -334,6 +338,8 @@ def edit_profile(username):
     if request.method == "GET":
         return render_template("profile_edit.html", user=user)
 
+    check_csrf()
+
     if request.method == "POST":
         username = request.form["username"]
         if username == "":
@@ -372,6 +378,8 @@ def edit_comment(comment_id):
     if request.method == "GET":
         return render_template("edit_comment.html", comment=comment)
 
+    check_csrf()
+
     if request.method == "POST":
         print("editing comment", comment_id)
         check_csrf()
@@ -379,6 +387,7 @@ def edit_comment(comment_id):
         if len(new_content) > 1000:
             abort(403)
         marketplace.update_comment(comment_id, new_content)
+        print('comment updated')
         return redirect("/location/" + str(location_id))
 
 @app.route("/category/<string:tag_name>")
